@@ -1,11 +1,12 @@
 import { MainPage } from "@/pages"
+import { MainLayout } from "@/widgets"
 
 function App() {
 
   return (
-    <>
-      <MainPage />
-    </>
+    <MainLayout>
+      <MainPage/>
+    </MainLayout>
   )
 }
 
