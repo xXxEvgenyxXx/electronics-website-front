@@ -1,12 +1,19 @@
-import { MainPage } from "@/pages"
 import { MainLayout } from "@/widgets"
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import { routes } from "./routes";
 
 function App() {
 
   return (
-    <MainLayout>
-      <MainPage/>
-    </MainLayout>
+    <Router>
+      <MainLayout>
+        <Routes>
+          {routes.map((route) => (
+            <Route path={route.path} element={<route.element/>} />
+          ))}
+        </Routes>
+      </MainLayout>
+    </Router>
   )
 }
 
