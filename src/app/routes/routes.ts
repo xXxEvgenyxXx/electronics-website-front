@@ -4,7 +4,9 @@ import {
     CartPage,
     CatalogPage,
     ContactsPage,
-    FavoritePage
+    FavoritePage,
+    LoginPage,
+    RegisterPage
 } from "@/pages";
 
 export const routes = [
@@ -38,4 +40,14 @@ export const routes = [
         path: "/favorite",
         element: FavoritePage
     },
+    {
+        name:"Войти",
+        path:"/login",
+        element: LoginPage
+    },
+    {
+        name: "Регистрация",
+        path:"/register",
+        element: RegisterPage
+    }
 ]
