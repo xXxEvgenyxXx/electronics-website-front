@@ -1,8 +1,9 @@
+import { MainLayout } from "@/widgets"
 
 export function AboutPage(){
     return (
-        <div>
+        <MainLayout>
             О нас
-        </div>
+        </MainLayout>
     )
 }

@@ -1,9 +1,9 @@
-
+import { MainLayout } from "@/widgets"
 
 export function MainPage(){
     return (
-        <div>
+        <MainLayout>
             Hello World
-        </div>
+        </MainLayout>
     )
 }

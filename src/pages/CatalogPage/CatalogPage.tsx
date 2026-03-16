@@ -1,8 +1,9 @@
+import { MainLayout } from "@/widgets"
 
 export function CatalogPage(){
     return (
-        <div>
+        <MainLayout>
             Каталог
-        </div>
+        </MainLayout>
     )
 }

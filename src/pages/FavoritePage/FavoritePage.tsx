@@ -1,8 +1,9 @@
+import { MainLayout } from "@/widgets"
 
 export function FavoritePage(){
     return (
-        <div>
+        <MainLayout>
             Избранное
-        </div>
+        </MainLayout>
     )
 }

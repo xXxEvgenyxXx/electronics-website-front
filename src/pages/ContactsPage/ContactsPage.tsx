@@ -1,8 +1,9 @@
+import { MainLayout } from "@/widgets"
 
 export function ContactsPage(){
     return (
-        <div>
+        <MainLayout>
             Контакты
-        </div>
+        </MainLayout>
     )
 }
