@@ -1,0 +1,19 @@
+.header {
+    display: flex;
+    justify-content:space-around;
+    border: 3px solid var(--color-border);
+    border-radius:12px;
+    .headerLinks {
+        display: flex;
+        align-items: center;
+        gap:20px;
+        .headerLink {
+            text-decoration: none;
+            color:var(--color-text);
+            font-size:18px;
+            &:hover {
+                color:var(--color-border);
+            }
+        }
+    }
+}
