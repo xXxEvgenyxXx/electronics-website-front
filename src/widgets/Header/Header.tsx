@@ -14,13 +14,12 @@ export function Header(){
             </div>
             <div className={s.headerLinks}>
                 <Link className={s.headerLink} to="/favorite">
-                    <HeartOutlined /> Избранное
+                    <HeartOutlined />
                 </Link>
                 <Link className={s.headerLink} to="/cart">
-                    <ShoppingCartOutlined /> Корзина
+                    <ShoppingCartOutlined /> 
                 </Link>
-                <Link className={s.headerLink} to="/login">Войти</Link>
-                <Link className={s.headerLink} to="/register">Зарегистрироваться</Link>
+                <Link className={s.headerLink} to="/login">Вход</Link>
             </div>
         </header>
     )
