@@ -5,7 +5,7 @@ import { HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons'
 export function Header(){
     return (
         <header className={s.header}>
-            <h2><Link to="/"><img src="/logo.svg"/></Link></h2>
+            <h2><Link className={s.title} to="/">ЭлектроГрад</Link></h2>
             <div className={s.headerLinks}>
                 <Link className={s.headerLink} to="/">Главная</Link>
                 <Link className={s.headerLink} to="/catalog">Каталог</Link>

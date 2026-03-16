@@ -3,6 +3,10 @@
     justify-content:space-around;
     border: 3px solid var(--color-border);
     border-radius:12px;
+    .title {
+        text-decoration: none;
+        color:var(--color-text);
+    }
     .headerLinks {
         display: flex;
         align-items: center;
