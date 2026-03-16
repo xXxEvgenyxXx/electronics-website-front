@@ -1,26 +1,33 @@
-import s from './Header.module.scss'
-import { Link } from 'react-router'
-import { HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons'
+import s from './Header.module.scss';
+import { NavLink, type NavLinkRenderProps, Link } from 'react-router';
+import { HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 
-export function Header(){
+export function Header() {
+    const getLinkClass = ({ isActive }: NavLinkRenderProps) => 
+        isActive ? `${s.headerLink} ${s.active}` : s.headerLink;
+
     return (
         <header className={s.header}>
-            <h2><Link className={s.title} to="/">ЭлектроГрад</Link></h2>
+            <h2>
+                <Link className={s.title} to="/">
+                    ЭлектроГрад
+                </Link>
+            </h2>
             <div className={s.headerLinks}>
-                <Link className={s.headerLink} to="/">Главная</Link>
-                <Link className={s.headerLink} to="/catalog">Каталог</Link>
-                <Link className={s.headerLink} to="/about">О нас</Link>
-                <Link className={s.headerLink} to="/contacts">Контакты</Link>
+                <NavLink className={getLinkClass} to="/" end>Главная</NavLink>
+                <NavLink className={getLinkClass} to="/catalog">Каталог</NavLink>
+                <NavLink className={getLinkClass} to="/about">О нас</NavLink>
+                <NavLink className={getLinkClass} to="/contacts">Контакты</NavLink>
             </div>
             <div className={s.headerLinks}>
-                <Link className={s.headerLink} to="/favorite">
+                <NavLink className={getLinkClass} to="/favorite">
                     <HeartOutlined />
-                </Link>
-                <Link className={s.headerLink} to="/cart">
+                </NavLink>
+                <NavLink className={getLinkClass} to="/cart">
                     <ShoppingCartOutlined /> 
-                </Link>
+                </NavLink>
                 <Link className={s.headerLink} to="/login">Вход</Link>
             </div>
         </header>
-    )
+    );
 }
