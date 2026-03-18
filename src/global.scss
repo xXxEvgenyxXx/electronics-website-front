@@ -1,11 +1,23 @@
 :root {
-    --color-text: #111827;
-    --color-border: #1E3A8A;
-    --color-hover: whitesmoke;
+  --color-text: #111827;
+  --color-border: #1E3A8A;
+  --color-hover: whitesmoke;
+  --background-body: white;
 }
+
 body {
-    color:var(--color-text);
-    margin:0;
-    padding:0;
-    font-family: 'Roboto',sans-serif;
+  color: var(--color-text);
+  background-color: var(--background-body);
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  transition: background-color 0.3s, color 0.3s; // плавный переход
+}
+
+// Тёмная тема
+body.dark {
+  --color-text: #f0f0f0;
+  --color-border: #3b82f6;
+  --color-hover: #333;
+  --background-body: #121212;
 }
