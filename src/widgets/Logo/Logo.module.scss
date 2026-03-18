@@ -1,0 +1,9 @@
+.logo {
+    text-decoration: none;
+    color:var(--color-text);
+    transition:0.3s;
+    &:hover {
+        color:var(--color-border);
+        transition:0.3s;
+    }
+}

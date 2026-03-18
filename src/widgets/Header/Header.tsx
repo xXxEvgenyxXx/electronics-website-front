@@ -1,6 +1,7 @@
 import s from './Header.module.scss';
 import { NavLink, type NavLinkRenderProps, Link } from 'react-router';
 import { HeartOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { Logo } from '../Logo';
 
 export function Header() {
     const getLinkClass = ({ isActive }: NavLinkRenderProps) => 
@@ -8,11 +9,7 @@ export function Header() {
 
     return (
         <header className={s.header}>
-            <h2>
-                <Link className={s.title} to="/">
-                    ЭлектроГрад
-                </Link>
-            </h2>
+            <Logo />
             <div className={s.headerLinks}>
                 <NavLink className={getLinkClass} to="/" end>Главная</NavLink>
                 <NavLink className={getLinkClass} to="/catalog">Каталог</NavLink>
