@@ -20,7 +20,7 @@ export function RegisterPage(){
                 name="register"
                 autoComplete="off"
             >
-                <Button href="/" className={s.backButton} type="link" icon="&lt;" />
+                <Link to="/" className={s.backButton} type="link">&lt;</Link>
                 <Form.Item
                     label="Имя"
                     name="name"

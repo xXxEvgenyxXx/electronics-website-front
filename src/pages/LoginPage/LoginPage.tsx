@@ -20,7 +20,7 @@ export function LoginPage(){
                 name="login"
                 autoComplete="on"
             >
-                <Button href="/" className={s.backButton} type="link" icon="&lt;" />
+                <Link to="/" className={s.backButton} type="link">&lt;</Link>
                 <Form.Item
                     label="Логин"
                     name="login"

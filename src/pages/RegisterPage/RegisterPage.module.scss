@@ -16,8 +16,11 @@
     .backButton {
       position: absolute;
       top:10px;
-      left:10px;
+      left:15px;
       color:var(--color-text);
+      &:hover {
+        color:var(--color-border);
+      }
     }
     :global {
       .ant-form-item-label > label {
