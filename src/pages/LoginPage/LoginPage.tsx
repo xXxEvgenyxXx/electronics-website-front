@@ -2,6 +2,7 @@ import { Form, Input, Button } from "antd"
 //import type { FormProps } from "antd"
 import s from './LoginPage.module.scss'
 import { Link } from "react-router"
+import { LeftOutlined } from "@ant-design/icons"
 
 //interface LoginFormType {
 //    login: string,
@@ -20,7 +21,7 @@ export function LoginPage(){
                 name="login"
                 autoComplete="on"
             >
-                <Link to="/" className={s.backButton} type="link">&lt;</Link>
+                <Link to="/" className={s.backButton} type="link"><LeftOutlined/></Link>
                 <Form.Item
                     label="Логин"
                     name="login"
