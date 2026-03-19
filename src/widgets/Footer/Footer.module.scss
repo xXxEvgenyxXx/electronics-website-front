@@ -1,4 +1,18 @@
 .footer {
     border-top: 3px solid var(--color-border);
     width:100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    .linksWrapper {
+        .link {
+            text-decoration: none;
+            color:var(--color-text);
+            transition: 0.3s;
+            &:hover {
+                color:var(--color-border);
+                transition:0.3s;
+            };
+        }
+    }
 }
