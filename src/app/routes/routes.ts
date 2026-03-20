@@ -6,7 +6,8 @@ import {
     ContactsPage,
     FavoritePage,
     LoginPage,
-    RegisterPage
+    RegisterPage,
+    ProfilePage
 } from "@/pages";
 
 export const routes = [
@@ -49,5 +50,10 @@ export const routes = [
         name: "Регистрация",
         path:"/register",
         element: RegisterPage
+    },
+    {
+        name:"Личный кабинет",
+        path:'/profile',
+        element: ProfilePage
     }
 ]

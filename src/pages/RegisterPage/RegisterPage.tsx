@@ -1,38 +1,55 @@
-import { Form, Input, Button } from "antd"
-//import type { FormProps } from "antd"
-import s from './RegisterPage.module.scss'
-import { Link } from "react-router"
-import { LeftOutlined } from "@ant-design/icons"
+import { Form, Input, Button, message } from "antd";
+import s from './RegisterPage.module.scss';
+import { Link, useNavigate } from "react-router";
+import { LeftOutlined } from "@ant-design/icons";
+import axios from "axios";
+import { useState } from "react";
 
-//interface LoginFormType {
-//    login: string,
-//    email:string,
-//    password: string,
-//    name: string,
-//    surname:string,
-//    patronymic?:string
-//}
+export function RegisterPage() {
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-export function RegisterPage(){
+    const onFinish = async (values: {
+        name: string;
+        surname: string;
+        patronymic?: string;
+        email: string;
+        login: string;
+        password: string;
+    }) => {
+        setLoading(true);
+        try {
+            await axios.post('/api/users', values);
+            message.success('Регистрация прошла успешно!');
+            navigate('/login');
+        } catch (error) {
+            console.error('Registration error:', error);
+            message.error('Ошибка при регистрации. Попробуйте позже.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className={s.formWrapper}>
             <Form
                 className={s.form}
                 name="register"
                 autoComplete="off"
+                onFinish={onFinish}
             >
-                <Link to="/" className={s.backButton} type="link"><LeftOutlined/></Link>
+                <Link to="/" className={s.backButton} type="link"><LeftOutlined /></Link>
                 <Form.Item
                     label="Имя"
                     name="name"
-                    rules={[{ required: true, message: 'Это поле обязательно'}]}
+                    rules={[{ required: true, message: 'Это поле обязательно' }]}
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
                     label="Фамилия"
                     name="surname"
-                    rules={[{ required: true, message: 'Это поле обязательно'}]}
+                    rules={[{ required: true, message: 'Это поле обязательно' }]}
                 >
                     <Input />
                 </Form.Item>
@@ -45,31 +62,34 @@ export function RegisterPage(){
                 <Form.Item
                     label="Электронная почта"
                     name="email"
-                    rules={[{ required: true, message: 'Это поле обязательно'}]}
+                    rules={[
+                        { required: true, message: 'Это поле обязательно' },
+                        { type: 'email', message: 'Введите корректный email' }
+                    ]}
                 >
                     <Input type="email" />
                 </Form.Item>
                 <Form.Item
                     label="Логин"
                     name="login"
-                    rules={[{ required: true, message: 'Это поле обязательно'}]}
+                    rules={[{ required: true, message: 'Это поле обязательно' }]}
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
                     label="Пароль"
                     name="password"
-                    rules={[{ required: true, message: 'Это поле обязательно'}]}
+                    rules={[{ required: true, message: 'Это поле обязательно' }]}
                 >
-                    <Input type="password" />
+                    <Input.Password />
                 </Form.Item>
-                <Button htmlType="submit">
-                    Войти
+                <Button htmlType="submit" type="primary" loading={loading}>
+                    Зарегистрироваться
                 </Button>
                 <p>
                     Уже зарегистрированы? <Link to="/login">Войти</Link>
                 </p>
             </Form>
         </div>
-    )
+    );
 }
