@@ -51,6 +51,8 @@ export const routes = [
         path:"/register",
         element: RegisterPage
     },
+]
+export const protectedRoutes = [
     {
         name:"Личный кабинет",
         path:'/profile',

@@ -12,15 +12,20 @@ export function LoginPage() {
     const onFinish = async (values: { login: string; password: string }) => {
         setLoading(true);
         try {
-            const response = await axios.get('/api/users', {
-                params: {
-                    login: values.login,
-                    password: values.password,
-                },
-            });
-            if (response.data && response.data.length > 0) {
+            // Получаем всех пользователей
+            const response = await axios.get('/api/users');
+            const users = response.data;
+
+            // Ищем пользователя с указанным логином и паролем
+            const user = users.find(
+                (u: any) => u.login === values.login && u.password === values.password
+            );
+
+            if (user) {
                 message.success('Вход выполнен успешно!');
-                localStorage.setItem('user', JSON.stringify(response.data[0]));
+                // Сохраняем данные пользователя (исключая пароль для безопасности)
+                const { password, ...userWithoutPassword } = user;
+                localStorage.setItem('user', JSON.stringify(userWithoutPassword));
                 navigate('/');
             } else {
                 message.error('Неверный логин или пароль');
@@ -56,7 +61,7 @@ export function LoginPage() {
                     name="password"
                     rules={[{ required: true, message: 'Это поле обязательно' }]}
                 >
-                    <Input.Password />
+                    <Input type="password" />
                 </Form.Item>
                 <Button htmlType="submit" type="primary" loading={loading}>
                     Войти
