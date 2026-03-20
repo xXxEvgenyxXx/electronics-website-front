@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useLayoutEffect } from 'react';
 
 type Theme = 'light' | 'dark';
 
@@ -10,24 +10,23 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('light');
-
-  // При монтировании проверяем сохранённую тему в localStorage
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
+  // Синхронное чтение из localStorage при инициализации
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('theme') as Theme | null;
+      return saved === 'light' || saved === 'dark' ? saved : 'light';
     }
-  }, []);
+    return 'light';
+  });
 
-  // При изменении темы обновляем класс у body и сохраняем в localStorage
-  useEffect(() => {
-    document.body.className = theme; // или document.body.setAttribute('data-theme', theme)
+  // Применяем тему до отрисовки, чтобы избежать мигания
+  useLayoutEffect(() => {
+    document.body.className = theme; // или data-theme, как вам удобнее
     localStorage.setItem('theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
   };
 
   return (
@@ -37,7 +36,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   );
 };
 
-// Хук для удобного использования контекста
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
