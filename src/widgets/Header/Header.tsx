@@ -51,7 +51,7 @@ export function Header() {
         </NavLink>
         {user ? (
           <>
-            <NavLink className={s.headerLink} to="/profile">{user.login}</NavLink>
+            <Link className={s.headerLink} to="/profile">{user.login}</Link>
             <Button
               type="link"
               onClick={handleLogout}

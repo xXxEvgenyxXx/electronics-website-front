@@ -10,7 +10,7 @@ export const useAuth = () => {
 
   useEffect(() => {
     // Симуляция проверки токена
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user');
     setTimeout(() => {
       setIsAuthenticated(!!token);
       setIsLoading(false);
