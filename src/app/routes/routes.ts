@@ -22,11 +22,6 @@ export const routes = [
         element: AboutPage
     },
     {
-        name: "Корзина",
-        path: "/cart",
-        element: CartPage
-    },
-    {
         name: "Каталог",
         path: "/catalog",
         element: CatalogPage
@@ -35,11 +30,6 @@ export const routes = [
         name: "Контакты",
         path: "/contacts",
         element: ContactsPage
-    },
-    {
-        name: "Избранное",
-        path: "/favorite",
-        element: FavoritePage
     },
     {
         name:"Войти",
@@ -57,5 +47,15 @@ export const protectedRoutes = [
         name:"Личный кабинет",
         path:'/profile',
         element: ProfilePage
-    }
+    },
+    {
+        name: "Корзина",
+        path: "/cart",
+        element: CartPage
+    },
+    {
+        name: "Избранное",
+        path: "/favorite",
+        element: FavoritePage
+    },
 ]
