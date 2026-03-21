@@ -1,0 +1,9 @@
+.brandCard {
+    max-width: 250px;
+    background-color: var(--color-border);
+    padding: 25px;
+    border-radius: 12px;
+    .brandImage {
+        width:100%;
+    }
+}
