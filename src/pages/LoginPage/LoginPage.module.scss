@@ -28,8 +28,7 @@
       }
 
       .ant-input {
-        color: var(--color-text);
-        background-color: var(--color-bg);
+        color: var(--color-input-text);
         border-color: var(--color-border);
 
         &::placeholder {

@@ -38,7 +38,12 @@ export function RegisterPage() {
                 autoComplete="off"
                 onFinish={onFinish}
             >
-                <Link to="/" className={s.backButton} type="link"><LeftOutlined /></Link>
+                <Button
+                    className={s.backButton}
+                    type="link"
+                    icon={<LeftOutlined />}
+                    onClick={() =>  navigate(-1)}
+                />
                 <Form.Item
                     label="Имя"
                     name="name"
@@ -73,7 +78,7 @@ export function RegisterPage() {
                     name="password"
                     label="Пароль:"
                 >
-                    <Input type="password" />
+                    <Input.Password />
                 </Form.Item>
                 <Button htmlType="submit" type="primary" loading={loading}>
                     Зарегистрироваться

@@ -46,9 +46,12 @@ export function LoginPage() {
                 autoComplete="on"
                 onFinish={onFinish}
             >
-                <Link to="/" className={s.backButton} type="link">
-                    <LeftOutlined />
-                </Link>
+                <Button
+                    className={s.backButton}
+                    type="link"
+                    icon={<LeftOutlined />}
+                    onClick={() =>  navigate(-1)}
+                />
                 <Form.Item
                     label="Логин"
                     name="login"
@@ -61,7 +64,7 @@ export function LoginPage() {
                     name="password"
                     rules={[{ required: true, message: 'Это поле обязательно' }]}
                 >
-                    <Input type="password" />
+                    <Input.Password />
                 </Form.Item>
                 <Button htmlType="submit" type="primary" loading={loading}>
                     Войти

@@ -1,6 +1,7 @@
 :root {
   --color-text: #111827;
   --color-border: #1E3A8A;
+  --color-input-text: #111827;
   --color-hover: whitesmoke;
   --background-body: white;
   --color-shadow:rgba(0, 0, 0, 0.33);;
@@ -22,17 +23,4 @@ body.dark {
   --color-hover: #333;
   --background-body: #121212;
   --color-shadow: rgba(255, 255, 255, 0.33);
-}
-.ant-form-item-label > label {
-  color: var(--color-text);
-}
-
-.ant-input {
-  color: var(--color-text);
-  background-color: var(--background-body);
-  border-color: var(--color-border);
-
-  &::placeholder {
-    color: var(--color-text-placeholder);
-  }
 }
