@@ -42,14 +42,12 @@ export function RegisterPage() {
                 <Form.Item
                     label="Имя"
                     name="name"
-                    rules={[{ required: true, message: 'Это поле обязательно' }]}
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
                     label="Фамилия"
                     name="surname"
-                    rules={[{ required: true, message: 'Это поле обязательно' }]}
                 >
                     <Input />
                 </Form.Item>
@@ -62,26 +60,20 @@ export function RegisterPage() {
                 <Form.Item
                     label="Электронная почта"
                     name="email"
-                    rules={[
-                        { required: true, message: 'Это поле обязательно' },
-                        { type: 'email', message: 'Введите корректный email' }
-                    ]}
                 >
                     <Input type="email" />
                 </Form.Item>
                 <Form.Item
                     label="Логин"
                     name="login"
-                    rules={[{ required: true, message: 'Это поле обязательно' }]}
                 >
                     <Input />
                 </Form.Item>
                 <Form.Item
-                    label="Пароль"
                     name="password"
-                    rules={[{ required: true, message: 'Это поле обязательно' }]}
+                    label="Пароль:"
                 >
-                    <Input.Password />
+                    <Input type="password" />
                 </Form.Item>
                 <Button htmlType="submit" type="primary" loading={loading}>
                     Зарегистрироваться

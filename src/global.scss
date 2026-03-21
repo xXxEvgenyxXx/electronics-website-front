@@ -3,6 +3,7 @@
   --color-border: #1E3A8A;
   --color-hover: whitesmoke;
   --background-body: white;
+  --color-shadow:rgba(0, 0, 0, 0.33);;
 }
 
 body {
@@ -20,4 +21,18 @@ body.dark {
   --color-border: #3b82f6;
   --color-hover: #333;
   --background-body: #121212;
+  --color-shadow: rgba(255, 255, 255, 0.33);
+}
+.ant-form-item-label > label {
+  color: var(--color-text);
+}
+
+.ant-input {
+  color: var(--color-text);
+  background-color: var(--background-body);
+  border-color: var(--color-border);
+
+  &::placeholder {
+    color: var(--color-text-placeholder);
+  }
 }
