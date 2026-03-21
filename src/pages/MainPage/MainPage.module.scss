@@ -1,4 +1,7 @@
 .mainPageWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     .categoryCards {
         display: grid;
         grid-template-columns: repeat(4,1fr);
