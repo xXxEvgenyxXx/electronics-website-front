@@ -1,12 +1,11 @@
 import s from './ProfilePage.module.scss'
-import { MainLayout } from '@/widgets'
+import { ProfileLayout } from '@/widgets'
 
 export function ProfilePage(){
+    console.log(localStorage.getItem('user'))
     return (
-        <MainLayout>
-            <div className={s.profilePage}>
-                Личный Кабинет
-            </div>
-        </MainLayout>
+        <ProfileLayout>
+            1234
+        </ProfileLayout>
     )
 }
