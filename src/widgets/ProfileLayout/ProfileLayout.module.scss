@@ -1,6 +1,10 @@
 .profilePage {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     width:100vw;
+    flex:1;
+    .profileContent {
+        width:80%;
+    }
 }

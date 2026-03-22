@@ -5,7 +5,9 @@ export function ProfilePage(){
     console.log(localStorage.getItem('user'))
     return (
         <ProfileLayout>
-            1234
+            <div className={s.profilePage}>
+                Profile page
+            </div>
         </ProfileLayout>
     )
 }

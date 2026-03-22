@@ -7,7 +7,8 @@ import {
     FavoritePage,
     LoginPage,
     RegisterPage,
-    ProfilePage
+    ProfilePage,
+    ProfileOrdersPage
 } from "@/pages";
 
 export const routes = [
@@ -58,4 +59,9 @@ export const protectedRoutes = [
         path: "/favorite",
         element: FavoritePage
     },
+    {
+        name:"Мои заказы",
+        path: "/profile/orders",
+        element: ProfileOrdersPage
+    }
 ]
