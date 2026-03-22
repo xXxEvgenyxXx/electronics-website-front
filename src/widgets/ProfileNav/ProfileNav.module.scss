@@ -2,4 +2,31 @@
     width:20%;
     display: flex;
     justify-content: center;
+    transition:0.3s;
+    .profileNavContent {
+        border: 1px solid var(--color-border);
+        padding:20px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        gap:15px;
+        transition:0.3s;
+        .active {
+            background-color: var(--color-hover);
+            color:var(--color-border) !important;
+            transition:0.3s;
+        }
+        .profileNavLink {
+            text-decoration: none;
+            color:var(--color-text);
+            padding:10px;
+            border-radius: 6px;
+            transition:0.3s;
+            &:hover {
+                color:var(--color-border);
+                background-color: var(--color-hover);
+                transition:0.3s;
+            };
+        }
+    }
 }

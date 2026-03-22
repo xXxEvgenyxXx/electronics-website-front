@@ -6,6 +6,7 @@ import { Logo } from '../Logo';
 import { Switch, Button } from 'antd';
 import { useTheme } from '@/widgets';
 import s from './Header.module.scss';
+import clsx from 'clsx';
 
 export function Header() {
   const { theme, toggleTheme } = useTheme();
@@ -31,7 +32,7 @@ export function Header() {
   };
 
   const getLinkClass = ({ isActive }: NavLinkRenderProps) =>
-    isActive ? `${s.headerLink} ${s.active}` : s.headerLink;
+    isActive ? clsx(s.headerLink, s.active) : s.headerLink;
 
   return (
     <header className={s.header}>

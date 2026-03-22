@@ -61,7 +61,7 @@ export const protectedRoutes = [
     },
     {
         name:"Мои заказы",
-        path: "/profile/orders",
+        path: "/my-orders",
         element: ProfileOrdersPage
     }
 ]
