@@ -1,7 +1,6 @@
 :root {
   --color-text: #111827;
   --color-border: #1E3A8A;
-  --color-input-text: #111827;
   --color-hover: whitesmoke;
   --background-body: white;
   --color-shadow:rgba(0, 0, 0, 0.33);;
@@ -30,23 +29,27 @@ body.dark {
 }
 
 .ant-input {
-  color: var(--color-input-text) !important;
+  color: var(--color-text) !important;
   border-color: var(--color-border) !important;
+  background-color: var(--background-body) !important;
   transition:0.3s;
 
   &::placeholder {
     color: var(--color-text) !important;
     transition:0.3s;
   }
+  &:hover {
+    background-color:var(--background-body) !important;
+  }
 }
 .ant-btn-default {
-  color: var(--color-text);
-  border-color: var(--color-border);
+  color: var(--color-text) !important;
+  border-color: var(--color-border) !important;
+  background-color: var(--background-body) !important;
   transition: 0.3s;
 
   &:hover,
   &:focus {
-    color: var(--color-hover);
-    border-color: var(--color-hover);
+    color: var(--color-border) !important;
   }
 }
