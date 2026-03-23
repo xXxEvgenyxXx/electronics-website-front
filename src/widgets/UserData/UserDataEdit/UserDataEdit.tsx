@@ -1,5 +1,5 @@
 // UserDataEdit.tsx
-import React, { forwardRef, useImperativeHandle } from 'react';
+import { forwardRef, useImperativeHandle } from 'react';
 import { Form, Input } from 'antd';
 import s from './UserDataEdit.module.scss';
 
