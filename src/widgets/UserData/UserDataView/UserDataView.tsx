@@ -1,11 +1,21 @@
-import s from './UserDataView.module.scss'
+// UserDataView.tsx
+import s from './UserDataView.module.scss';
 
-export function UserDataView(){
-    const user = JSON.parse(localStorage.getItem('user')!);
-    return (
-        <div className={s.userDataView}>
-            <h1>{user.surname} {user.name} {user.patronymic}</h1>
-            <h2>{user.login}</h2>
-        </div>
-    )
+interface UserDataViewProps {
+  data: {
+    name: string;
+    surname: string;
+    patronymic?: string;
+    login: string;
+    email: string;
+  };
+}
+
+export function UserDataView({ data }: UserDataViewProps) {
+  return (
+    <div className={s.userDataView}>
+      <h1>{data.surname} {data.name} {data.patronymic}</h1>
+      <h2>{data.login}</h2>
+    </div>
+  );
 }

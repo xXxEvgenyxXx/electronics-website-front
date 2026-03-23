@@ -1,41 +1,73 @@
-import s from './UserData.module.scss'
-import { UserOutlined } from "@ant-design/icons";
+import { useState, useRef } from 'react';
+import { Button, message } from 'antd';
+import { UserOutlined, EditOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 import { UserDataView } from './UserDataView/UserDataView';
-import { Button } from 'antd';
-import { EditOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
-import { useState } from 'react';
-import { UserDataEdit } from './UserDataEdit/UserDataEdit';
+import { UserDataEdit, type UserDataEditRef } from './UserDataEdit/UserDataEdit';
+import s from './UserData.module.scss';
 
-export function UserData(){
+export function UserData() {
+  const initialUser = JSON.parse(localStorage.getItem('user')!);
+  const [userData, setUserData] = useState(initialUser);
+  const [isEditable, setIsEditable] = useState(false);
+  const editFormRef = useRef<UserDataEditRef>(null);
 
-    const [isEditable, toggleProfileEditability] = useState(false);
+  const handleEditClick = () => setIsEditable(true);
+  const handleCancel = () => setIsEditable(false);
 
-    function handleClick(){
-        toggleProfileEditability(!isEditable)
+  const handleSave = async () => {
+    const updatedFormValues = editFormRef.current?.getFormValues();
+    if (!updatedFormValues) return;
+
+    const { id, ...updatePayload } = {
+      ...userData,
+      ...updatedFormValues,
+    };
+
+    try {
+      const response = await fetch(`/api/users/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatePayload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save user data');
+      }
+
+      const savedUser = await response.json();
+      localStorage.setItem('user', JSON.stringify(savedUser));
+      setUserData(savedUser);
+      setIsEditable(false);
+      message.success('Данные сохранены');
+    } catch (error) {
+      console.error('Save error:', error);
+      message.error('Не удалось сохранить данные');
     }
-    
-    function handleSave(){
-        handleClick()
-    }
+  };
 
-    return (
-        <div className={s.userDataWrapper}>
-            <UserOutlined className={s.avatar}/>
-            {!isEditable && (
-                <>
-                    <UserDataView/>
-                    <Button onClick={handleClick} icon={<EditOutlined/>}>Редактировать профиль</Button>
-                </>
-            )}
-            {isEditable && (
-                <>
-                    <UserDataEdit/>
-                    <div className={s.buttonsWrapper}>
-                        <Button onClick={handleSave} icon={<SaveOutlined/>}>Сохранить</Button>
-                        <Button onClick={handleClick} icon={<CloseOutlined/>}>Отмена</Button>
-                    </div>
-                </>
-            )}
-        </div>
-    )
+  return (
+    <div className={s.userDataWrapper}>
+      <UserOutlined className={s.avatar} />
+      {!isEditable ? (
+        <>
+          <UserDataView data={userData} />
+          <Button onClick={handleEditClick} icon={<EditOutlined />}>
+            Редактировать профиль
+          </Button>
+        </>
+      ) : (
+        <>
+          <UserDataEdit ref={editFormRef} data={userData} />
+          <div className={s.buttonsWrapper}>
+            <Button onClick={handleSave} icon={<SaveOutlined />}>
+              Сохранить
+            </Button>
+            <Button onClick={handleCancel} icon={<CloseOutlined />}>
+              Отмена
+            </Button>
+          </div>
+        </>
+      )}
+    </div>
+  );
 }
