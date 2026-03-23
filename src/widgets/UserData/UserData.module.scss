@@ -1,7 +1,27 @@
 .userDataWrapper {
     transition:0.3s;
+    display: flex;
+    flex-direction: column;
+    gap:25px;
+    .userData {
+        display: flex;
+        flex-direction: column;
+        gap:25px;
+        .button {
+            max-width:250px;
+        }
+        .buttonsWrapper {
+            display: flex;
+            gap:25px;
+        }
+    }
     .avatar {
         transition:0.3s;
+        width:50px;
+        height:50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         font-size:32px;
         background-color:var(--color-hover);
         color:var(--text-color);

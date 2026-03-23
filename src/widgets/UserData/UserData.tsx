@@ -49,24 +49,24 @@ export function UserData() {
     <div className={s.userDataWrapper}>
       <UserOutlined className={s.avatar} />
       {!isEditable ? (
-        <>
+        <div className={s.userData}>
           <UserDataView data={userData} />
-          <Button type="primary" onClick={handleEditClick} icon={<EditOutlined />}>
+          <Button className={s.button} type="primary" onClick={handleEditClick} icon={<EditOutlined />}>
             Редактировать профиль
           </Button>
-        </>
+        </div>
       ) : (
-        <>
+        <div className={s.userData}>
           <UserDataEdit ref={editFormRef} data={userData} />
           <div className={s.buttonsWrapper}>
-            <Button type="primary" onClick={handleSave} icon={<SaveOutlined />}>
+            <Button  className={s.button} type="primary" onClick={handleSave} icon={<SaveOutlined />}>
               Сохранить
             </Button>
-            <Button onClick={handleCancel} icon={<CloseOutlined />}>
+            <Button className={s.button} onClick={handleCancel} icon={<CloseOutlined />}>
               Отмена
             </Button>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
