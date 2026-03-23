@@ -24,3 +24,29 @@ body.dark {
   --background-body: #121212;
   --color-shadow: rgba(255, 255, 255, 0.33);
 }
+.ant-form-item-label > label {
+  color: var(--color-text) !important;
+  transition:0.3s;
+}
+
+.ant-input {
+  color: var(--color-input-text) !important;
+  border-color: var(--color-border) !important;
+  transition:0.3s;
+
+  &::placeholder {
+    color: var(--color-text) !important;
+    transition:0.3s;
+  }
+}
+.ant-btn-default {
+  color: var(--color-text);
+  border-color: var(--color-border);
+  transition: 0.3s;
+
+  &:hover,
+  &:focus {
+    color: var(--color-hover);
+    border-color: var(--color-hover);
+  }
+}

@@ -51,7 +51,7 @@ export function UserData() {
       {!isEditable ? (
         <>
           <UserDataView data={userData} />
-          <Button onClick={handleEditClick} icon={<EditOutlined />}>
+          <Button type="primary" onClick={handleEditClick} icon={<EditOutlined />}>
             Редактировать профиль
           </Button>
         </>
@@ -59,7 +59,7 @@ export function UserData() {
         <>
           <UserDataEdit ref={editFormRef} data={userData} />
           <div className={s.buttonsWrapper}>
-            <Button onClick={handleSave} icon={<SaveOutlined />}>
+            <Button type="primary" onClick={handleSave} icon={<SaveOutlined />}>
               Сохранить
             </Button>
             <Button onClick={handleCancel} icon={<CloseOutlined />}>

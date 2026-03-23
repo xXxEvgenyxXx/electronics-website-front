@@ -22,19 +22,5 @@
         color:var(--color-border);
       }
     }
-    :global {
-      .ant-form-item-label > label {
-        color: var(--color-text);
-      }
-
-      .ant-input {
-        color: var(--color-input-text);
-        border-color: var(--color-border);
-
-        &::placeholder {
-          color: var(--color-text-placeholder);
-        }
-      }
-    }
   }
 }
