@@ -73,7 +73,8 @@ export function RegisterPage() {
         // Если всё уникально, отправляем запрос на регистрацию
         setLoading(true);
         try {
-            await axios.post('/api/users', values);
+            const userData = { ...values, role: 'user' };
+            await axios.post('/api/users', userData);
             message.success('Регистрация прошла успешно!');
             navigate('/login');
         } catch (error) {
