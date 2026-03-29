@@ -62,7 +62,6 @@ export function RegisterPage() {
         setChecking(false);
 
         if (!isUnique) {
-            // Устанавливаем ошибки на поля
             const fieldErrors = [];
             if (errors.email) fieldErrors.push({ name: 'email', errors: [errors.email] });
             if (errors.login) fieldErrors.push({ name: 'login', errors: [errors.login] });
@@ -70,11 +69,15 @@ export function RegisterPage() {
             return;
         }
 
+        const registrationData = {
+            ...values,
+            roleID: 1 
+        };
+
         // Если всё уникально, отправляем запрос на регистрацию
         setLoading(true);
         try {
-            const userData = { ...values, role: 'user' };
-            await axios.post('/api/users', userData);
+            await axios.post('/api/users', registrationData); // Используем модифицированные данные
             message.success('Регистрация прошла успешно!');
             navigate('/login');
         } catch (error) {

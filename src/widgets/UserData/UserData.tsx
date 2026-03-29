@@ -18,13 +18,11 @@ export function UserData() {
     const updatedFormValues = editFormRef.current?.getFormValues();
     if (!updatedFormValues) return;
 
-    const { id, ...updatePayload } = {
-      ...userData,
-      ...updatedFormValues,
-    };
+    // Создаем объект обновления, исключая вложенные объекты
+    const updatePayload = { ...updatedFormValues };
 
     try {
-      const response = await fetch(`/api/users/${id}`, {
+      const response = await fetch(`/api/users/${userData.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatePayload),
@@ -59,7 +57,7 @@ export function UserData() {
         <div className={s.userData}>
           <UserDataEdit ref={editFormRef} data={userData} />
           <div className={s.buttonsWrapper}>
-            <Button  className={s.button} type="primary" onClick={handleSave} icon={<SaveOutlined />}>
+            <Button className={s.button} type="primary" onClick={handleSave} icon={<SaveOutlined />}>
               Сохранить
             </Button>
             <Button className={s.button} onClick={handleCancel} icon={<CloseOutlined />}>
