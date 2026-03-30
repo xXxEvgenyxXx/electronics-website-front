@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { NavLink, type NavLinkRenderProps, Link } from 'react-router';
-import { HeartOutlined, ShoppingCartOutlined, LogoutOutlined } from '@ant-design/icons';
+import { HeartOutlined, ShoppingCartOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons';
 import { Logo } from '../Logo';
 import { Switch, Button } from 'antd';
 import { useTheme } from '@/widgets';
@@ -11,9 +11,8 @@ import clsx from 'clsx';
 export function Header() {
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
-  const [user, setUser] = useState<{ login: string } | null>(null);
+  const [user, setUser] = useState<{ login: string; role?: { name: string } } | null>(null);
 
-  // Загружаем данные пользователя при монтировании компонента
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -28,7 +27,7 @@ export function Header() {
   const handleLogout = () => {
     localStorage.removeItem('user');
     setUser(null);
-    navigate('/'); // перенаправляем на главную после выхода
+    navigate('/');
   };
 
   const getLinkClass = ({ isActive }: NavLinkRenderProps) =>
@@ -50,6 +49,11 @@ export function Header() {
         <NavLink className={getLinkClass} to="/cart">
           <ShoppingCartOutlined />
         </NavLink>
+        {user?.role?.name && (
+          <NavLink className={getLinkClass} to="/admin-panel">
+            <SettingOutlined />
+          </NavLink>
+        )}
         {user ? (
           <>
             <Link className={s.headerLink} to="/profile">{user.login}</Link>

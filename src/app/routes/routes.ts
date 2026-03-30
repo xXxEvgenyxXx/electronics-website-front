@@ -8,7 +8,8 @@ import {
     LoginPage,
     RegisterPage,
     ProfilePage,
-    ProfileOrdersPage
+    ProfileOrdersPage,
+    AdminPanelPage
 } from "@/pages";
 
 export const routes = [
@@ -63,5 +64,12 @@ export const protectedRoutes = [
         name:"Мои заказы",
         path: "/my-orders",
         element: ProfileOrdersPage
+    }
+]
+export const adminRoutes = [
+    {
+        name: "Панель администратора",
+        path: "/admin-panel",
+        element: AdminPanelPage
     }
 ]
