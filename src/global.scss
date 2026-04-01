@@ -55,3 +55,29 @@ body.dark {
     color: var(--color-border) !important;
   }
 }
+// Checkbox styles for theme
+.ant-checkbox-wrapper {
+  color: var(--color-text) !important;
+  transition: 0.3s;
+}
+
+.ant-checkbox {
+  .ant-checkbox-inner {
+    background-color: var(--background-body) !important;
+    border-color: var(--color-border) !important;
+    transition: 0.3s;
+  }
+
+  &.ant-checkbox-checked .ant-checkbox-inner {
+    background-color: var(--color-border) !important;
+    border-color: var(--color-border) !important;
+  }
+
+  &.ant-checkbox-checked::after {
+    border-color: var(--color-border) !important;
+  }
+
+  &:hover .ant-checkbox-inner {
+    border-color: var(--color-border) !important;
+  }
+}
