@@ -1,0 +1,90 @@
+.catalogCard {
+  background-color: var(--background-body);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px var(--color-shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px var(--color-shadow);
+  }
+
+  .cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+
+    h4 {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 500;
+      line-height: 1.4;
+      color: var(--color-text);
+    }
+
+    button {
+      color: var(--color-text);
+      transition: color 0.2s;
+
+      &:hover {
+        color: #ff4d4f;
+      }
+    }
+  }
+
+  .cardBody {
+    margin-bottom: 1rem;
+
+    .price {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--color-border);
+      margin: 0 0 0.5rem 0;
+    }
+
+    .manufacturer {
+      font-size: 0.85rem;
+      color: var(--color-text);
+      opacity: 0.8;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .stock {
+      font-size: 0.85rem;
+      margin: 0;
+
+      &.inStock {
+        color: #52c41a;
+      }
+
+      &.outOfStock {
+        color: #ff4d4f;
+      }
+    }
+  }
+
+  .cardFooter {
+    button {
+      width: 100%;
+      background-color: var(--color-border);
+      border-color: var(--color-border);
+      transition: background-color 0.2s;
+
+      &:hover:not(:disabled) {
+        background-color: darken(#1e3a8a, 10%);
+        border-color: darken(#1e3a8a, 10%);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+}

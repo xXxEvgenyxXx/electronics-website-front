@@ -5,7 +5,9 @@
   --background-body: white;
   --color-shadow:rgba(0, 0, 0, 0.33);;
 }
-
+*{
+  transition:0.3s;
+}
 body {
   color: var(--color-text);
   background-color: var(--background-body);
