@@ -1,0 +1,94 @@
+.profileOrders {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  color: var(--color-text);
+  transition: 0.3s;
+
+  .loading,
+  .error,
+  .noOrders {
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 3rem;
+    background-color: var(--background-body);
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+  }
+
+  .error {
+    color: #dc2626; // keep error red independent of theme or use a variable
+    border-color: #dc2626;
+  }
+
+  .title {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--color-border);
+    padding-left: 1rem;
+    color: var(--color-text);
+  }
+
+  .orderList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .orderCard {
+    background-color: var(--background-body);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px var(--color-shadow);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px var(--color-shadow);
+      background-color: var(--color-hover);
+      border-color: var(--color-border);
+    }
+
+    .orderHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px dashed var(--color-border);
+
+      .orderId {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--color-border);
+      }
+
+      .orderDate {
+        font-size: 0.9rem;
+        color: var(--color-text);
+        opacity: 0.8;
+      }
+    }
+
+    .orderDetails {
+      display: flex;
+      gap: 2rem;
+      font-size: 0.95rem;
+      color: var(--color-text);
+
+      div {
+        background: rgba(0, 0, 0, 0.03);
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        transition: 0.3s;
+      }
+    }
+  }
+}
