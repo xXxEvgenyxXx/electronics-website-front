@@ -49,7 +49,7 @@ export function Header() {
         <NavLink className={getLinkClass} to="/cart">
           <ShoppingCartOutlined />
         </NavLink>
-        {user?.role?.name && (
+        {user?.role?.name === "admin" && (
           <NavLink className={getLinkClass} to="/admin-panel">
             <SettingOutlined />
           </NavLink>
