@@ -9,7 +9,8 @@ import {
     RegisterPage,
     ProfilePage,
     ProfileOrdersPage,
-    AdminPanelPage
+    AdminPanelPage,
+    DeliveryPage
 } from "@/pages";
 
 export const routes = [
@@ -54,6 +55,11 @@ export const protectedRoutes = [
         name: "Корзина",
         path: "/cart",
         element: CartPage
+    },
+    {
+        name: "Доставка",
+        path: "/delivery",
+        element: DeliveryPage
     },
     {
         name: "Избранное",
