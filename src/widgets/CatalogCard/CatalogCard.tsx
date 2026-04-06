@@ -24,6 +24,7 @@ export interface Product {
 interface CatalogCardProps {
   product: Product;
   isFavorite: boolean;
+  isInCart?: boolean;
   onToggleFavorite: (productId: number) => void;
   onAddToCart: (productId: number) => void;
 }
@@ -31,6 +32,7 @@ interface CatalogCardProps {
 export function CatalogCard({
   product,
   isFavorite,
+  isInCart = false,
   onToggleFavorite,
   onAddToCart,
 }: CatalogCardProps) {
@@ -57,9 +59,9 @@ export function CatalogCard({
           type="primary"
           icon={<ShoppingCartOutlined />}
           onClick={() => onAddToCart(product.id)}
-          disabled={product.inStock === 0}
+          disabled={product.inStock === 0 || isInCart}
         >
-          В корзину
+          {isInCart ? 'В корзине' : 'В корзину'}
         </Button>
       </div>
     </div>

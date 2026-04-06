@@ -24,17 +24,10 @@ const toggleFavorite = (productId: number, currentFavorites: number[]): number[]
   return updated;
 };
 
-const addToCart = (productId: number) => {
+const getCartIds = (): number[] => {
   const stored = localStorage.getItem(CART_KEY);
   const cart = stored ? JSON.parse(stored) : [];
-  const existing = cart.find((item: { id: number }) => item.id === productId);
-  if (existing) {
-    existing.quantity += 1;
-  } else {
-    cart.push({ id: productId, quantity: 1 });
-  }
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  message.success('Товар добавлен в корзину');
+  return cart.map((item: { id: number }) => item.id);
 };
 
 const PAGE_SIZE = 6;
@@ -45,6 +38,7 @@ export function CatalogPage() {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<Set<number>>(new Set());
   const [favorites, setFavorites] = useState<number[]>(getFavorites());
+  const [cartIds, setCartIds] = useState<number[]>(getCartIds());
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -99,6 +93,18 @@ export function CatalogPage() {
     setFavorites(updated);
   };
 
+  const handleAddToCart = (productId: number) => {
+    const stored = localStorage.getItem(CART_KEY);
+    const cart = stored ? JSON.parse(stored) : [];
+    const existing = cart.find((item: { id: number }) => item.id === productId);
+    if (!existing) {
+      cart.push({ id: productId, quantity: 1 });
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      setCartIds(prev => [...prev, productId]);
+      message.success('Товар добавлен в корзину');
+    }
+  };
+
   // Pagination: slice the filtered products
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const paginatedProducts = filteredProducts.slice(startIndex, startIndex + PAGE_SIZE);
@@ -137,8 +143,9 @@ export function CatalogPage() {
                 key={product.id}
                 product={product}
                 isFavorite={favorites.includes(product.id)}
+                isInCart={cartIds.includes(product.id)}
                 onToggleFavorite={handleToggleFavorite}
-                onAddToCart={addToCart}
+                onAddToCart={handleAddToCart}
               />
             ))}
           </div>
