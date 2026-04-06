@@ -21,9 +21,6 @@ export function Footer(){
                     <Link className={s.link} to="/catalog">Каталог</Link>
                 </p>
                 <p>
-                    <Link className={s.link} to="/about">О нас</Link>
-                </p>
-                <p>
                     <Link className={s.link} to="/contacts">Контакты</Link>
                 </p>
             </div>

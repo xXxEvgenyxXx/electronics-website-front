@@ -1,6 +1,5 @@
 import { 
     MainPage,
-    AboutPage,
     CartPage,
     CatalogPage,
     ContactsPage,
@@ -18,11 +17,6 @@ export const routes = [
         name: "Главная",
         path: "/",
         element: MainPage
-    },
-    {
-        name: "О нас",
-        path: "/about",
-        element: AboutPage
     },
     {
         name: "Каталог",

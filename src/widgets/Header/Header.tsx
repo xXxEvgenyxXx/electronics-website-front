@@ -39,7 +39,6 @@ export function Header() {
       <div className={s.headerLinks}>
         <NavLink className={getLinkClass} to="/" end>Главная</NavLink>
         <NavLink className={getLinkClass} to="/catalog">Каталог</NavLink>
-        <NavLink className={getLinkClass} to="/about">О нас</NavLink>
         <NavLink className={getLinkClass} to="/contacts">Контакты</NavLink>
       </div>
       <div className={s.headerLinks}>
