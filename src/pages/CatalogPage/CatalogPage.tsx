@@ -157,6 +157,7 @@ export function CatalogPage() {
                 total={totalProducts}
                 onChange={page => setCurrentPage(page)}
                 showSizeChanger={false}
+                showQuickJumper={false}
               />
             </div>
           )}

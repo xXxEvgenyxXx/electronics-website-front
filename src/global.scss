@@ -81,3 +81,83 @@ body.dark {
     border-color: var(--color-border) !important;
   }
 }
+/* ===== PAGINATION FIX FOR DARK THEME ===== */
+.ant-pagination {
+  color: var(--color-text);
+  background-color: transparent;
+}
+
+/* All pagination buttons (numbers, prev, next, jump) */
+.ant-pagination-item,
+.ant-pagination-prev,
+.ant-pagination-next,
+.ant-pagination-jump-prev,
+.ant-pagination-jump-next {
+  background-color: var(--background-body) !important;
+  border: 1px solid var(--color-border) !important;
+  transition: 0.3s;
+}
+
+/* Links and buttons inside */
+.ant-pagination-item a,
+.ant-pagination-prev .ant-pagination-item-link,
+.ant-pagination-next .ant-pagination-item-link,
+.ant-pagination-jump-prev .ant-pagination-item-link,
+.ant-pagination-jump-next .ant-pagination-item-link {
+  color: var(--color-text) !important;
+  background-color: transparent !important;
+}
+
+/* Hover effect */
+.ant-pagination-item:hover,
+.ant-pagination-prev:hover,
+.ant-pagination-next:hover,
+.ant-pagination-jump-prev:hover,
+.ant-pagination-jump-next:hover {
+  background-color: var(--color-hover) !important;
+  border-color: var(--color-border) !important;
+}
+
+.ant-pagination-item:hover a,
+.ant-pagination-prev:hover .ant-pagination-item-link,
+.ant-pagination-next:hover .ant-pagination-item-link {
+  color: var(--color-border) !important;
+}
+
+/* Active (current) page */
+.ant-pagination-item-active {
+  background-color: var(--color-border) !important;
+  border-color: var(--color-border) !important;
+}
+
+.ant-pagination-item-active a {
+  color: var(--background-body) !important;
+}
+
+.ant-pagination-item-active:hover {
+  background-color: var(--color-border) !important;
+}
+
+/* Disabled buttons (prev/next when on first/last page) */
+.ant-pagination-disabled,
+.ant-pagination-disabled:hover {
+  background-color: var(--background-body) !important;
+  opacity: 0.6;
+}
+
+.ant-pagination-disabled .ant-pagination-item-link,
+.ant-pagination-disabled:hover .ant-pagination-item-link {
+  color: var(--color-text) !important;
+  opacity: 0.5;
+}
+
+/* Quick jump dropdown (if any) */
+.ant-pagination-options-quick-jumper input {
+  background-color: var(--background-body) !important;
+  border-color: var(--color-border) !important;
+  color: var(--color-text) !important;
+}
+
+.ant-pagination-options-quick-jumper label {
+  color: var(--color-text) !important;
+}
