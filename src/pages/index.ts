@@ -1,5 +1,4 @@
 export * from './MainPage/MainPage'
-export * from './AboutPage/AboutPage'
 export * from './CartPage/CartPage'
 export * from './CatalogPage/CatalogPage'
 export * from './ContactsPage/ContactsPage'

@@ -1,33 +1,115 @@
 .header {
     display: flex;
-    justify-content:space-around;
+    justify-content: space-between; // на мобильных лучше space-between
     align-items: center;
     border: 3px solid var(--color-border);
-    border-radius:12px;
+    border-radius: 12px;
     padding: 0 20px;
-    width:80%;
-    margin-top:10px;
+    width: 80%;
+    margin-top: 10px;
+    gap: 20px;
+
     .headerLinks {
         display: flex;
         align-items: center;
-        gap:20px;
+        gap: 20px;
+
         .active {
             background-color: var(--color-hover);
-            color:var(--color-border) !important;
-            transition:0.3s;
+            color: var(--color-border) !important;
+            transition: 0.3s;
         }
+
         .headerLink {
             text-decoration: none;
-            color:var(--color-text);
-            font-size:18px;
-            padding:5px;
+            color: var(--color-text);
+            font-size: 18px;
+            padding: 5px;
             border-radius: 6px;
-            transition:0.3s;
+            transition: 0.3s;
+
             &:hover {
-                color:var(--color-border);
-                transition:0.3s;
-                background-color:var(--color-hover);
+                color: var(--color-border);
+                transition: 0.3s;
+                background-color: var(--color-hover);
             }
+        }
+    }
+
+    .burgerButton {
+        margin-left: auto;
+    }
+
+    // Адаптив для мобильных устройств (ширина ≤ 768px)
+    @media (max-width: 768px) {
+        width: 95%;
+        padding: 0 12px;
+        justify-content: space-between;
+    }
+
+    // Специально для экранов ≤ 360px
+    @media (max-width: 360px) {
+        width: 98%;
+        padding: 0 8px;
+        border-radius: 8px;
+    }
+}
+
+// Стили для Drawer (мобильное меню)
+.mobileDrawer {
+    :global(.ant-drawer-header) {
+        border-bottom: 1px solid var(--color-border);
+        background-color: var(--color-bg);
+        color: var(--color-text);
+    }
+    :global(.ant-drawer-body) {
+        background-color: var(--color-bg);
+        padding: 20px;
+    }
+}
+
+.mobileMenuContent {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .mobileMenuSection {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: 16px;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        .headerLink {
+            text-decoration: none;
+            color: var(--color-text);
+            font-size: 18px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            &:hover {
+                background-color: var(--color-hover);
+                color: var(--color-border);
+            }
+        }
+
+        .active {
+            background-color: var(--color-hover);
+            color: var(--color-border) !important;
+        }
+
+        .themeLabel {
+            color: var(--color-text);
+            font-size: 16px;
+            margin-right: 12px;
         }
     }
 }
