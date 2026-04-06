@@ -1,18 +1,72 @@
 .footer {
     border-top: 3px solid var(--color-border);
-    width:100%;
+    width: 100%;
     display: flex;
     justify-content: space-around;
     align-items: center;
+    padding: 20px 0;
+
     .linksWrapper {
         .link {
             text-decoration: none;
-            color:var(--color-text);
+            color: var(--color-text);
             transition: 0.3s;
             &:hover {
-                color:var(--color-border);
-                transition:0.3s;
-            };
+                color: var(--color-border);
+                transition: 0.3s;
+            }
+        }
+    }
+
+    // Планшеты (до 768px)
+    @media (max-width: 768px) {
+        flex-wrap: wrap;
+        gap: 30px;
+        justify-content: center;
+        padding: 30px 20px;
+        text-align: center;
+    }
+
+    // Мобильные устройства (до 480px) – включая целевые 360px
+    @media (max-width: 480px) {
+        flex-direction: column;
+        gap: 25px;
+        text-align: center;
+        padding: 20px 16px;
+
+        .linksWrapper {
+            h3 {
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+            }
+            p {
+                margin: 8px 0;
+                font-size: 0.9rem;
+            }
+            .link {
+                font-size: 0.9rem;
+                display: inline-block;
+                padding: 5px 0;
+            }
+        }
+    }
+
+    // Экстремально узкие экраны (до 360px)
+    @media (max-width: 360px) {
+        gap: 20px;
+        padding: 16px 12px;
+
+        .linksWrapper {
+            h3 {
+                font-size: 1.1rem;
+            }
+            p {
+                font-size: 0.85rem;
+                line-height: 1.4;
+            }
+            .link {
+                font-size: 0.85rem;
+            }
         }
     }
 }
