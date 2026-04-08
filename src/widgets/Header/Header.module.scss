@@ -1,115 +1,144 @@
+// Добавляем глобальную настройку box-sizing для всех элементов в шапке
+.header,
+.header * {
+  box-sizing: border-box;
+}
+
 .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 3px solid var(--color-border);
+  border-radius: 12px;
+  padding: 0 20px;
+  margin-top: 10px;
+  gap: 20px;
+
+  // Десктопная версия: центрируем и ограничиваем максимальную ширину
+  width: 80%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+
+  .headerLinks {
     display: flex;
-    justify-content: space-between; // на мобильных лучше space-between
     align-items: center;
-    border: 3px solid var(--color-border);
-    border-radius: 12px;
-    padding: 0 20px;
-    width: 80%;
-    margin-top: 10px;
     gap: 20px;
 
-    .headerLinks {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-
-        .active {
-            background-color: var(--color-hover);
-            color: var(--color-border) !important;
-            transition: 0.3s;
-        }
-
-        .headerLink {
-            text-decoration: none;
-            color: var(--color-text);
-            font-size: 18px;
-            padding: 5px;
-            border-radius: 6px;
-            transition: 0.3s;
-
-            &:hover {
-                color: var(--color-border);
-                transition: 0.3s;
-                background-color: var(--color-hover);
-            }
-        }
+    .active {
+      background-color: var(--color-hover);
+      color: var(--color-border) !important;
+      transition: 0.3s;
     }
 
-    .burgerButton {
-        margin-left: auto;
-    }
+    .headerLink {
+      text-decoration: none;
+      color: var(--color-text);
+      font-size: 18px;
+      padding: 5px;
+      border-radius: 6px;
+      transition: 0.3s;
+      white-space: nowrap; // предотвращаем перенос текста в десктопной версии
 
-    // Адаптив для мобильных устройств (ширина ≤ 768px)
-    @media (max-width: 1024px) {
-        width: 95%;
-        padding: 0 12px;
-        justify-content: space-between;
+      &:hover {
+        color: var(--color-border);
+        background-color: var(--color-hover);
+      }
     }
+  }
 
-    // Специально для экранов ≤ 360px
-    @media (max-width: 360px) {
-        width: 98%;
-        padding: 0 8px;
-        border-radius: 8px;
-    }
+  .burgerButton {
+    margin-left: auto;
+  }
+
+  // Планшеты и маленькие ноутбуки (ширина ≤ 1024px)
+  @media (max-width: 1024px) {
+    width: 95%;
+    padding: 0 12px;
+  }
+
+  // Мобильные устройства (ширина ≤ 768px) – занимаем всю ширину, убираем горизонтальные отступы
+  @media (max-width: 768px) {
+    width: 100%;
+    border-radius: 0;
+    margin-top: 0;
+    padding: 0 16px;
+  }
+
+  // Очень узкие экраны (≤ 480px)
+  @media (max-width: 480px) {
+    padding: 0 12px;
+  }
+
+  // Экстремально узкие (≤ 360px) – минимальные отступы
+  @media (max-width: 360px) {
+    padding: 0 8px;
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+  }
 }
 
 // Стили для Drawer (мобильное меню)
 .mobileDrawer {
-    :global(.ant-drawer-header) {
-        border-bottom: 1px solid var(--color-border);
-        background-color: var(--color-bg);
-        color: var(--color-text);
-    }
-    :global(.ant-drawer-body) {
-        background-color: var(--color-bg);
-        padding: 20px;
-    }
+  :global(.ant-drawer-header) {
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+  }
+  :global(.ant-drawer-body) {
+    background-color: var(--color-bg);
+    padding: 20px;
+  }
+
+  // Гарантируем, что Drawer не вылезает за пределы экрана
+  :global(.ant-drawer-content-wrapper) {
+    max-width: 100vw !important;
+  }
 }
 
 .mobileMenuContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  .mobileMenuSection {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 16px;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 16px;
 
-    .mobileMenuSection {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        border-bottom: 1px solid var(--color-border);
-        padding-bottom: 16px;
-
-        &:last-child {
-            border-bottom: none;
-        }
-
-        .headerLink {
-            text-decoration: none;
-            color: var(--color-text);
-            font-size: 18px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-
-            &:hover {
-                background-color: var(--color-hover);
-                color: var(--color-border);
-            }
-        }
-
-        .active {
-            background-color: var(--color-hover);
-            color: var(--color-border) !important;
-        }
-
-        .themeLabel {
-            color: var(--color-text);
-            font-size: 16px;
-            margin-right: 12px;
-        }
+    &:last-child {
+      border-bottom: none;
     }
+
+    .headerLink {
+      text-decoration: none;
+      color: var(--color-text);
+      font-size: 18px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      &:hover {
+        background-color: var(--color-hover);
+        color: var(--color-border);
+      }
+    }
+
+    .active {
+      background-color: var(--color-hover);
+      color: var(--color-border) !important;
+    }
+
+    .themeLabel {
+      color: var(--color-text);
+      font-size: 16px;
+      margin-right: 12px;
+    }
+  }
 }
