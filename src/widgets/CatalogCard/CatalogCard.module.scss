@@ -87,4 +87,162 @@
       }
     }
   }
+
+  // Адаптив для планшетов и небольших ноутбуков (до 1024px)
+  @media (max-width: 1024px) {
+    padding: 0.875rem;
+    border-radius: 10px;
+
+    .cardHeader {
+      margin-bottom: 0.875rem;
+
+      h4 {
+        font-size: 1rem;
+      }
+    }
+
+    .cardBody {
+      margin-bottom: 0.875rem;
+
+      .price {
+        font-size: 1.2rem;
+        margin-bottom: 0.4rem;
+      }
+
+      .manufacturer {
+        font-size: 0.8rem;
+        margin-bottom: 0.4rem;
+      }
+
+      .stock {
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  // Планшеты вертикальные (до 768px)
+  @media (max-width: 768px) {
+    padding: 0.75rem;
+    border-radius: 8px;
+
+    .cardHeader {
+      margin-bottom: 0.75rem;
+
+      h4 {
+        font-size: 0.95rem;
+      }
+    }
+
+    .cardBody {
+      margin-bottom: 0.75rem;
+
+      .price {
+        font-size: 1.1rem;
+        margin-bottom: 0.35rem;
+      }
+
+      .manufacturer {
+        font-size: 0.75rem;
+        margin-bottom: 0.35rem;
+      }
+
+      .stock {
+        font-size: 0.75rem;
+      }
+    }
+
+    .cardFooter button {
+      font-size: 0.85rem;
+      height: auto;
+      padding: 0.4rem 0;
+    }
+  }
+
+  // Крупные телефоны (до 480px)
+  @media (max-width: 480px) {
+    padding: 0.625rem;
+    border-radius: 6px;
+
+    // Убираем hover-эффекты на мобильных
+    &:hover {
+      transform: none;
+      box-shadow: 0 2px 4px var(--color-shadow);
+    }
+
+    .cardHeader {
+      margin-bottom: 0.625rem;
+
+      h4 {
+        font-size: 0.9rem;
+      }
+
+      button {
+        transform: scale(0.9);
+      }
+    }
+
+    .cardBody {
+      margin-bottom: 0.625rem;
+
+      .price {
+        font-size: 1rem;
+        margin-bottom: 0.3rem;
+      }
+
+      .manufacturer {
+        font-size: 0.7rem;
+        margin-bottom: 0.3rem;
+      }
+
+      .stock {
+        font-size: 0.7rem;
+      }
+    }
+
+    .cardFooter button {
+      font-size: 0.8rem;
+      padding: 0.3rem 0;
+    }
+  }
+
+  // Самые узкие экраны (до 360px)
+  @media (max-width: 360px) {
+    padding: 0.5rem;
+    border-radius: 4px;
+
+    .cardHeader {
+      margin-bottom: 0.5rem;
+
+      h4 {
+        font-size: 0.85rem;
+      }
+
+      button {
+        transform: scale(0.8);
+      }
+    }
+
+    .cardBody {
+      margin-bottom: 0.5rem;
+
+      .price {
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .manufacturer {
+        font-size: 0.65rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .stock {
+        font-size: 0.65rem;
+      }
+    }
+
+    .cardFooter button {
+      font-size: 0.75rem;
+      padding: 0.25rem 0;
+    }
+  }
 }
