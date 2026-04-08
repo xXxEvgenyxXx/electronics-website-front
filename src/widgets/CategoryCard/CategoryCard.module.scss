@@ -4,15 +4,74 @@
     align-items: center;
     justify-content: center;
     padding: 10px 50px;
-    background-color:var(--color-text);
+    background-color: var(--color-text);
     transition: 0.3s;
-    border-radius:12px;
+    border-radius: 12px;
+
     .image {
-        max-width:200px;
+        max-width: 200px;
         transition: 0.3s;
-    };
+    }
+
     .name {
-        color:var(--color-hover);
+        color: var(--color-hover);
         transition: 0.3s;
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    // Планшеты и небольшие ноутбуки (до 1024px)
+    @media (max-width: 1024px) {
+        padding: 10px 30px;
+        border-radius: 10px;
+
+        .image {
+            max-width: 160px;
+        }
+
+        .name {
+            font-size: 0.9rem;
+        }
+    }
+
+    // Планшеты вертикальные (до 768px)
+    @media (max-width: 768px) {
+        padding: 8px 20px;
+        border-radius: 8px;
+
+        .image {
+            max-width: 130px;
+        }
+
+        .name {
+            font-size: 0.85rem;
+        }
+    }
+
+    // Крупные телефоны (до 480px)
+    @media (max-width: 480px) {
+        padding: 8px 16px;
+
+        .image {
+            max-width: 110px;
+        }
+
+        .name {
+            font-size: 0.8rem;
+        }
+    }
+
+    // Самые узкие экраны (до 360px)
+    @media (max-width: 360px) {
+        padding: 6px 12px;
+        border-radius: 6px;
+
+        .image {
+            max-width: 90px;
+        }
+
+        .name {
+            font-size: 0.7rem;
+        }
     }
 }
