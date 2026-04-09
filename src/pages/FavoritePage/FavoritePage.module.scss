@@ -2,24 +2,58 @@
   padding: 2rem;
   max-width: 1400px;
   margin: 0 auto;
-}
 
-.pageTitle {
-  font-size: 1.8rem;
-  font-weight: 500;
-  margin-bottom: 2rem;
-  color: var(--color-text);
-}
+  .pageTitle {
+    font-size: 1.8rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    color: var(--color-text);
+  }
 
-.cardsWrapper {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 1.5rem;
-}
+  .cardsWrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
 
-.loadingContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 60vh;
+  .loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+  }
+
+  // Адаптивность
+  @media (max-width: 992px) {
+    .cardsWrapper {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 576px) {
+    padding: 1rem;
+
+    .pageTitle {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .cardsWrapper {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+
+  @media (max-width: 360px) {
+    padding: 0.75rem;
+
+    .pageTitle {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+
+    .cardsWrapper {
+      gap: 0.75rem;
+    }
+  }
 }
