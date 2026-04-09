@@ -1,4 +1,51 @@
 .userDataView {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; // небольшой отступ между заголовками
+
+  h1 {
+    font-size: 1.8rem;
+    margin: 0;
+    word-break: break-word;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    margin: 0;
+    color: var(--text-secondary, #666);
+    word-break: break-word;
+  }
+}
+
+@media (max-width: 768px) {
+  .userDataView {
+    h1 {
+      font-size: 1.5rem;
+    }
+    h2 {
+      font-size: 1rem;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .userDataView {
+    h1 {
+      font-size: 1.3rem;
+    }
+    h2 {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .userDataView {
+    h1 {
+      font-size: 1.1rem;
+    }
+    h2 {
+      font-size: 0.8rem;
+    }
+  }
 }

@@ -1,31 +1,107 @@
 .userDataWrapper {
-    transition:0.3s;
+  transition: 0.3s;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+
+  .userData {
     display: flex;
     flex-direction: column;
-    gap:25px;
-    .userData {
-        display: flex;
-        flex-direction: column;
-        gap:25px;
-        .button {
-            max-width:250px;
-        }
-        .buttonsWrapper {
-            display: flex;
-            gap:25px;
-        }
+    gap: 25px;
+
+    .button {
+      max-width: 250px;
     }
+
+    .buttonsWrapper {
+      display: flex;
+      gap: 25px;
+    }
+  }
+
+  .avatar {
+    transition: 0.3s;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    background-color: var(--color-hover);
+    color: var(--text-color);
+    padding: 20px;
+    border-radius: 50%;
+  }
+}
+
+/* Планшеты и небольшие ноутбуки (до 768px) */
+@media (max-width: 768px) {
+  .userDataWrapper {
+    gap: 20px;
+
     .avatar {
-        transition:0.3s;
-        width:50px;
-        height:50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size:32px;
-        background-color:var(--color-hover);
-        color:var(--text-color);
-        padding:20px;
-        border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      font-size: 28px;
+      padding: 15px;
     }
+
+    .userData {
+      gap: 20px;
+
+      .button {
+        max-width: 220px;
+      }
+    }
+  }
+}
+
+/* Мобильные устройства (до 576px) */
+@media (max-width: 576px) {
+  .userDataWrapper {
+    gap: 16px;
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      font-size: 24px;
+      padding: 10px;
+    }
+
+    .userData {
+      gap: 16px;
+
+      .button {
+        max-width: 100%;
+        width: 100%;
+      }
+
+      .buttonsWrapper {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+  }
+}
+
+/* Очень узкие экраны (до 360px) – дополнительные корректировки */
+@media (max-width: 360px) {
+  .userDataWrapper {
+    gap: 12px;
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      font-size: 20px;
+      padding: 8px;
+    }
+
+    .userData {
+      gap: 12px;
+
+      .buttonsWrapper {
+        gap: 8px;
+      }
+    }
+  }
 }

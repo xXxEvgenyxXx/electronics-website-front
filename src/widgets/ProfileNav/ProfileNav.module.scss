@@ -28,5 +28,8 @@
                 transition:0.3s;
             };
         }
+        @media(max-width:1024px){
+            flex-direction: row;
+        }
     }
 }

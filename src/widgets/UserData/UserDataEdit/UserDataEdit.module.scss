@@ -1,3 +1,48 @@
 .userDataEdit {
-    max-width: 450px;
+  max-width: 450px;
+  width: 100%; // чтобы форма могла сжиматься
+
+  :global(.ant-form-item) {
+    margin-bottom: 20px;
+  }
+
+  :global(.ant-form-item-label) {
+    padding-bottom: 6px;
+  }
+}
+
+@media (max-width: 768px) {
+  .userDataEdit {
+    max-width: 100%;
+    
+    :global(.ant-form-item) {
+      margin-bottom: 18px;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .userDataEdit {
+    :global(.ant-form-item) {
+      margin-bottom: 16px;
+    }
+    :global(.ant-form-item-label > label) {
+      font-size: 14px;
+    }
+    :global(.ant-input) {
+      font-size: 14px;
+      padding: 8px 11px;
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .userDataEdit {
+    :global(.ant-form-item) {
+      margin-bottom: 12px;
+    }
+    :global(.ant-form-item-label > label) {
+      font-size: 13px;
+    }
+  }
 }
