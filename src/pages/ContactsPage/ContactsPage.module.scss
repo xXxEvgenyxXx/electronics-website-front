@@ -1,34 +1,151 @@
 .contactsPageWrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap:50px;
-    transition:0.3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  transition: 0.3s;
+
+  .contactsElement {
+    box-shadow: 4px 4px 5px 4px var(--color-shadow);
+    padding: 25px;
+    border-radius: 12px;
+    transition: 0.3s;
+
+    .icon {
+      padding: 10px;
+      border-radius: 50%;
+      background-color: var(--color-border);
+      color: var(--background-body);
+      transition: 0.3s;
+    }
+
+    .title {
+      transition: 0.3s;
+    }
+
+    .paragraph {
+      transition: 0.3s;
+    }
+  }
+
+  .messageForm {
+    transition: 0.3s;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+
+    .messageDataInput {
+      transition: 0.3s;
+    }
+
+    .messageInput {
+      grid-column: 1 / 4;
+      transition: 0.3s;
+    }
+
+    .button {
+      grid-column: 3 / 4;
+      transition: 0.3s;
+    }
+
+    .inputField,
+    .textareaField {
+      transition: 0.3s;
+    }
+  }
+
+  // Адаптивность
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px;
+
     .contactsElement {
-        box-shadow: 8px 8px 10px 8px var(--color-shadow);
-        padding:25px;
-        border-radius:12px;
-        transition:0.3s;
-        .icon {
-            padding: 10px;
-            border-radius: 50%;
-            background-color:var(--color-border);
-            color:var(--background-body);
-            transition:0.3s;
-        }
+      width: 100%;
+      padding: 20px;
+      text-align: center;
+
+      .icon {
+        margin-bottom: 10px;
+      }
+
+      .paragraph {
+        margin: 8px 0;
+        font-size: 14px;
+      }
     }
-    .messageForm{
-        transition:0.3s;
-        display: grid;
-        grid-template-columns: repeat(3,1fr);
-        gap:10px;
-        .messageInput {
-            grid-column: 1/4;
-            transition:0.3s;
-        }
-        .button {
-            grid-column: 3/4;
-            transition:0.3s;
-        }
+
+    .messageForm {
+      grid-template-columns: 1fr;
+      gap: 12px;
+
+      .messageDataInput,
+      .messageInput {
+        grid-column: auto;
+      }
+
+      .button {
+        grid-column: auto;
+        width: 100%;
+      }
     }
+  }
+
+  @media (max-width: 480px) {
+    gap: 20px;
+    padding: 15px;
+
+    .contactsElement {
+      padding: 16px;
+
+      .title {
+        font-size: 1.4rem;
+      }
+
+      .paragraph {
+        font-size: 13px;
+      }
+    }
+
+    .messageForm {
+      gap: 10px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    gap: 15px;
+    padding: 10px;
+
+    .contactsElement {
+      padding: 12px;
+
+      .icon {
+        padding: 8px;
+        font-size: 20px;
+      }
+
+      .title {
+        font-size: 1.2rem;
+      }
+
+      .paragraph {
+        font-size: 12px;
+        word-break: break-word;
+      }
+    }
+
+    .messageForm {
+      .inputField,
+      .textareaField {
+        font-size: 12px;
+        padding: 8px 10px;
+      }
+
+      .button {
+        font-size: 14px;
+        padding: 6px 12px;
+        height: auto;
+      }
+    }
+  }
 }
