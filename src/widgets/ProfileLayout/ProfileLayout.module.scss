@@ -2,9 +2,22 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width:100vw;
-    flex:1;
+    width: 100vw;
+    flex: 1;
+
     .profileContent {
-        width:80%;
+        width: 80%;
+    }
+
+    // Адаптив для экранов до 360px
+    @media (max-width: 360px) {
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: 1rem; // отступ между навигацией и контентом
+
+        .profileContent {
+            width: 100%;
+        }
     }
 }
