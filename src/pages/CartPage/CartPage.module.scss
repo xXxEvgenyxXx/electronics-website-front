@@ -7,17 +7,36 @@
     margin-bottom: 2rem;
     color: var(--color-text);
   }
+
+  // Адаптив до 360px
+  @media (max-width: 360px) {
+    padding: 1rem;
+
+    h1 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+  }
 }
 
 .cartContent {
   display: flex;
   gap: 2rem;
   flex-wrap: wrap;
+
+  @media (max-width: 360px) {
+    gap: 1rem;
+    flex-direction: column;
+  }
 }
 
 .itemsList {
   flex: 2;
   min-width: 280px;
+
+  @media (max-width: 360px) {
+    min-width: auto;
+  }
 }
 
 .cartItem {
@@ -57,6 +76,35 @@
     text-align: right;
     color: var(--color-border);
   }
+
+  // Адаптив для карточки товара
+  @media (max-width: 360px) {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.75rem;
+    gap: 0.75rem;
+
+    .itemInfo {
+      text-align: center;
+      .itemName {
+        font-size: 1rem;
+      }
+      .itemPrice {
+        font-size: 0.85rem;
+      }
+    }
+
+    .itemActions {
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .itemTotal {
+      text-align: center;
+      min-width: auto;
+      font-size: 1.1rem;
+    }
+  }
 }
 
 .summary {
@@ -75,9 +123,34 @@
   button {
     width: 100%;
   }
+
+  @media (max-width: 360px) {
+    padding: 0.75rem;
+    text-align: center;
+
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    button {
+      font-size: 0.9rem;
+      height: auto;
+      padding: 0.5rem 0;
+    }
+  }
 }
 
-.emptyCart, .loading {
+.emptyCart,
+.loading {
   text-align: center;
   padding: 4rem;
+
+  @media (max-width: 360px) {
+    padding: 2rem 1rem;
+
+    button {
+      margin-top: 1rem;
+    }
+  }
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { MainLayout } from '@/widgets';
 import { useNavigate } from 'react-router-dom';
-import { Button, InputNumber, message, Empty, Popconfirm } from 'antd';
+import { Button, InputNumber, message, Empty } from 'antd';
 import { DeleteOutlined, ShoppingOutlined } from '@ant-design/icons';
 import type { Product } from '@/widgets';
 import s from './CartPage.module.scss';
@@ -118,14 +118,11 @@ export function CartPage() {
                       value={item.quantity}
                       onChange={(val) => updateQuantity(item.id, val || 1)}
                     />
-                    <Popconfirm
-                      title="Удалить товар?"
-                      onConfirm={() => removeItem(item.id)}
-                      okText="Да"
-                      cancelText="Нет"
-                    >
-                      <Button icon={<DeleteOutlined />} danger />
-                    </Popconfirm>
+                    <Button
+                      onClick={() => removeItem(item.id)}
+                      icon={<DeleteOutlined />}
+                      danger
+                    />
                   </div>
                   <div className={s.itemTotal}>
                     {product.price * item.quantity} ₽
