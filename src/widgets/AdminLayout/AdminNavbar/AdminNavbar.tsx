@@ -12,7 +12,6 @@ export function AdminNavbar(){
                 <NavLink className={getLinkClass} to="/admin-panel">Статистика</NavLink>
                 <NavLink className={getLinkClass} to="/admin-products">Товары</NavLink>
                 <NavLink className={getLinkClass} to="/admin-orders">Заказы</NavLink>
-                <NavLink className={getLinkClass} to="/admin-categories">Категории</NavLink>
             </div>
         </div>
     )

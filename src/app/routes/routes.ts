@@ -13,7 +13,6 @@ import {
     AdminProductsPage,
     AdminOrdersPage
 } from "@/pages";
-import { AdminCategoriesPage } from "@/pages/AdminCategoriesPage/AdminCategoriesPage";
 
 export const routes = [
     {
@@ -85,9 +84,4 @@ export const adminRoutes = [
         path:"/admin-orders",
         element: AdminOrdersPage
     },
-    {
-        name: "Все категории",
-        path:"/admin-categories",
-        element:AdminCategoriesPage
-    }
 ]
