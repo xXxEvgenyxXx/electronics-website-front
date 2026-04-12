@@ -10,7 +10,8 @@
         transition:0.3s;
         display: flex;
         flex-direction: column;
-        gap:15px;
+        align-items: center;
+        justify-content: space-around;
         .adminLink {
             text-decoration: none;
             color:var(--color-text);
