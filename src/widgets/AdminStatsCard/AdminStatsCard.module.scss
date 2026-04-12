@@ -1,0 +1,26 @@
+.adminStatsCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap:10px;
+    border:2px solid var(--color-border);
+    border-radius: 12px;
+    max-width:150px;
+    padding:10px;
+    .iconWrapper {
+        font-size:32px;
+    }
+    .info {
+        display: flex;
+        flex-direction: column;
+        gap:10px;
+        align-items: center;
+        .name {
+            font-size:20px;
+        }
+        .statsNumber {
+            font-size:18px;
+        }
+    }
+}
