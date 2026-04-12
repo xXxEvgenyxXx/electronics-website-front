@@ -1,9 +1,10 @@
 import { MainLayout } from "@/widgets"
+import { AdminLayout } from "@/widgets"
 
 export function AdminPanelPage(){
     return (
-        <MainLayout>
+        <AdminLayout>
             Админ-панель
-        </MainLayout>
+        </AdminLayout>
     )
 }

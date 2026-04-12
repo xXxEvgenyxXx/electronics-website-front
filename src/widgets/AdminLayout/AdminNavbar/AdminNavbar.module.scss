@@ -1,0 +1,27 @@
+.adminNavbar {
+    width:15%;
+    display: flex;
+    justify-content: center;
+    transition:0.3s;
+    .content {
+        border:2px solid var(--color-border);
+        padding: 15px;
+        border-radius: 6px;
+        transition:0.3s;
+        display: flex;
+        flex-direction: column;
+        gap:15px;
+        .adminLink {
+            text-decoration: none;
+            color:var(--color-text);
+            transition:0.3s;
+            padding:10px;
+            border-radius: 6px;
+        }
+        .active, .adminLink:hover {
+            transition:0.3s;
+            color:var(--color-border);
+            background-color:var(--color-hover);
+        }
+    }
+}

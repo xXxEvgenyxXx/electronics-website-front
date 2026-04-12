@@ -9,8 +9,11 @@ import {
     ProfilePage,
     ProfileOrdersPage,
     AdminPanelPage,
-    DeliveryPage
+    DeliveryPage,
+    AdminProductsPage,
+    AdminOrdersPage
 } from "@/pages";
+import { AdminCategoriesPage } from "@/pages/AdminCategoriesPage/AdminCategoriesPage";
 
 export const routes = [
     {
@@ -71,5 +74,20 @@ export const adminRoutes = [
         name: "Панель администратора",
         path: "/admin-panel",
         element: AdminPanelPage
+    },
+    {
+        name:"Все товары",
+        path: "/admin-products",
+        element:AdminProductsPage
+    },
+    {
+        name:"Все заказы",
+        path:"/admin-orders",
+        element: AdminOrdersPage
+    },
+    {
+        name: "Все категории",
+        path:"/admin-categories",
+        element:AdminCategoriesPage
     }
 ]
