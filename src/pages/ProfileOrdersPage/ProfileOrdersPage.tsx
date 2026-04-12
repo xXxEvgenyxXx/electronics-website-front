@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import s from './ProfileOrdersPage.module.scss';
 import { ProfileLayout } from '@/widgets';
+import { orderStatuses } from '@/shared';
 
-// Types based on the API response
+// Типы на основе ответа API
 interface User {
   id: number;
   login: string;
@@ -17,7 +18,7 @@ interface Order {
   user: User;
   createdAt: string;
   statusID: number;
-  items: unknown[]; // Adjust if you have a more specific type for items
+  items: unknown[];
 }
 
 export function ProfileOrdersPage() {
@@ -29,29 +30,29 @@ export function ProfileOrdersPage() {
     const fetchOrders = async () => {
       try {
         setLoading(true);
-        // 1. Get logged-in user from localStorage
+        // 1. Получаем текущего пользователя из localStorage
         const userStr = localStorage.getItem('user');
         if (!userStr) {
-          throw new Error('User not found in localStorage. Please log in.');
+          throw new Error('Пользователь не найден в localStorage. Пожалуйста, войдите в систему.');
         }
         const currentUser = JSON.parse(userStr) as User;
         const currentUserId = currentUser.id;
 
-        // 2. Fetch all orders from the API
+        // 2. Запрашиваем все заказы с API
         const response = await fetch('/api/orders');
         if (!response.ok) {
-          throw new Error(`Failed to fetch orders: ${response.statusText}`);
+          throw new Error(`Не удалось загрузить заказы: ${response.statusText}`);
         }
         const allOrders = (await response.json()) as Order[];
 
-        // 3. Filter orders that belong to the current user
+        // 3. Фильтруем заказы, принадлежащие текущему пользователю
         const userOrders = allOrders.filter(
           (order) => order.user.id === currentUserId
         );
 
         setOrders(userOrders);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An unknown error occurred');
+        setError(err instanceof Error ? err.message : 'Произошла неизвестная ошибка');
       } finally {
         setLoading(false);
       }
@@ -60,27 +61,22 @@ export function ProfileOrdersPage() {
     fetchOrders();
   }, []);
 
-  // Helper to format the createdAt date
+  // Форматирование даты в русскоязычном формате
   const formatDate = (isoString: string) => {
-    return new Date(isoString).toLocaleString();
+    return new Date(isoString).toLocaleString('ru-RU');
   };
 
-  // Helper to get status text (you can extend this mapping)
+  // Получение названия статуса из массива orderStatuses
   const getStatusText = (statusID: number) => {
-    switch (statusID) {
-      case 1:
-        return 'Pending';
-      // Add more status mappings as needed
-      default:
-        return `Status ${statusID}`;
-    }
+    const status = orderStatuses.find((s) => s.id === statusID);
+    return status ? status.name : 'Неизвестный статус';
   };
 
   if (loading) {
     return (
       <ProfileLayout>
         <div className={s.profileOrders}>
-          <div className={s.loading}>Загружаем заказы...</div>
+          <div className={s.loading}>Загрузка заказов...</div>
         </div>
       </ProfileLayout>
     );
@@ -107,12 +103,12 @@ export function ProfileOrdersPage() {
             {orders.map((order) => (
               <div key={order.id} className={s.orderCard}>
                 <div className={s.orderHeader}>
-                  <span className={s.orderId}>Order #{order.id}</span>
+                  <span className={s.orderId}>Заказ №{order.id}</span>
                   <span className={s.orderDate}>{formatDate(order.createdAt)}</span>
                 </div>
                 <div className={s.orderDetails}>
-                  <div>Status: {getStatusText(order.statusID)}</div>
-                  <div>Items: {order.items.length}</div>
+                  <div>Статус: {getStatusText(order.statusID)}</div>
+                  <div>Товаров: {order.items.length}</div>
                 </div>
               </div>
             ))}
