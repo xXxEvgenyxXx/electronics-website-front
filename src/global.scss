@@ -161,3 +161,116 @@ body.dark {
 .ant-pagination-options-quick-jumper label {
   color: var(--color-text) !important;
 }
+
+.ant-table {
+  background-color: var(--background-body) !important;
+  color: var(--color-text) !important;
+}
+
+.ant-table-thead > tr > th {
+  background-color: var(--background-body) !important;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border) !important;
+  font-weight: 600;
+}
+
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--color-border) !important;
+  color: var(--color-text);
+}
+
+/* Row hover */
+.ant-table-tbody > tr:hover > td {
+  background-color: var(--color-hover) !important;
+}
+
+/* Selected row (if any) */
+.ant-table-tbody > tr.ant-table-row-selected > td {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Table border */
+.ant-table-container table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.ant-table-cell {
+  background-color: transparent !important;
+}
+
+/* Expand icon (if used) */
+.ant-table-expanded-row-fixed {
+  background-color: var(--background-body) !important;
+  color: var(--color-text) !important;
+}
+
+/* Empty state */
+.ant-table-placeholder {
+  background-color: var(--background-body) !important;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
+/* Pagination inside table (if not already covered) */
+.ant-table-pagination.ant-pagination {
+  margin: 16px 0;
+  color: var(--color-text) !important;
+}
+
+/* Filter dropdown, sort icons, etc. */
+.ant-table-column-sorters {
+  color: var(--color-text) !important;
+}
+
+.ant-table-column-sorter {
+  color: var(--color-text) !important;
+}
+
+.ant-table-column-sorter-up.active,
+.ant-table-column-sorter-down.active {
+  color: var(--color-border) !important;
+}
+
+.ant-table-filter-trigger {
+  color: var(--color-text) !important;
+}
+
+.ant-table-filter-trigger.active {
+  color: var(--color-border) !important;
+}
+
+/* Filter dropdown panel */
+.ant-dropdown-menu {
+  background-color: var(--background-body) !important;
+  color: var(--color-text) !important;
+  border-color: var(--color-border) !important;
+}
+
+.ant-dropdown-menu-item {
+  color: var(--color-text) !important;
+}
+
+.ant-dropdown-menu-item:hover {
+  background-color: var(--color-hover) !important;
+}
+
+/* Spin inside table */
+.ant-spin-nested-loading,
+.ant-spin-container {
+  background-color: transparent;
+}
+.ant-table-thead > tr > th,
+.ant-table-tbody > tr > td {
+  border-color: var(--color-text) !important;
+}
+
+/* Header text color */
+.ant-table-thead > tr > th {
+  color: var(--color-text) !important;
+}
+
+/* Vertical divider between header columns */
+.ant-table-thead > tr > th:not(:last-child):not(.ant-table-selection-column)::before {
+  background-color: var(--color-text) !important;
+}
