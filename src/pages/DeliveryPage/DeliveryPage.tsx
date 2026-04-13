@@ -2,48 +2,12 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { MainLayout } from '@/widgets';
 import { Form, Input, Button, message, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { getCurrentUser, getAllProducts, type User } from '@/shared';
 import type { Product } from '@/widgets';
 import s from './DeliveryPage.module.scss';
 
-interface CartItem {
-  id: number;
-  quantity: number;
-}
-
-interface User {
-  id: number;
-  login: string;
-  email: string;
-  name: string;
-  surname: string;
-  patronymic: string;
-  role: { id: number; name: string };
-}
-
-const CART_KEY = 'catalog_cart';
-const USER_KEY = 'user';
-
-const getCart = (): CartItem[] => {
-  const stored = localStorage.getItem(CART_KEY);
-  return stored ? JSON.parse(stored) : [];
-};
-
-const clearCart = () => {
-  localStorage.removeItem(CART_KEY);
-};
-
-const getUser = (): User | null => {
-  const stored = localStorage.getItem(USER_KEY);
-  if (!stored) return null;
-  try {
-    return JSON.parse(stored);
-  } catch {
-    return null;
-  }
-};
-
 export function DeliveryPage() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [user, setUser] = useState<User | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -52,44 +16,45 @@ export function DeliveryPage() {
 
   const isSubmittingRef = useRef(false);
   const isMountedRef = useRef(true);
-  const hasInitializedRef = useRef(false);
 
-  // Проверка авторизации и загрузка данных
   useEffect(() => {
     isMountedRef.current = true;
 
-    const user = getUser();
-    if (!user) {
-      message.error('Необходимо войти в систему');
-      navigate('/login');
-      return;
-    }
-
-    const cart = getCart();
-    if (cart.length === 0) {
-      message.warning('Корзина пуста');
-      navigate('/cart');
-      return;
-    }
-
-    if (hasInitializedRef.current) return;
-    hasInitializedRef.current = true;
-
-    setCartItems(cart);
-
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch('/api/products');
-        if (!res.ok) throw new Error('Ошибка загрузки товаров');
-        const allProducts: Product[] = await res.json();
-        if (!isMountedRef.current) return;
+        const fetchedUser = await getCurrentUser();
+        
+        if (!fetchedUser) {
+          message.error('Необходимо войти в систему');
+          navigate('/login');
+          return;
+        }
 
-        const cartProductIds = cart.map(item => item.id);
-        const cartProducts = allProducts.filter(p => cartProductIds.includes(p.id));
-        setProducts(cartProducts);
+        if (fetchedUser.cart.length === 0) {
+          message.warning('Корзина пуста');
+          navigate('/cart');
+          return;
+        }
+
+        const fetchedProducts = await getAllProducts();
+        
+        if (!isMountedRef.current) return;
+        
+        setUser(fetchedUser);
+        setProducts(fetchedProducts);
+        
+        // Заполняем форму данными пользователя
+        const fullName = `${fetchedUser.surname} ${fetchedUser.name} ${fetchedUser.patronymic || ''}`.trim();
+        form.setFieldsValue({
+          fullName: fullName,
+          email: fetchedUser.email,
+          phone: '',
+          address: '',
+        });
       } catch (error) {
         if (isMountedRef.current) {
-          message.error('Ошибка загрузки товаров');
+          console.error('Failed to fetch data:', error);
+          message.error('Ошибка загрузки данных');
           navigate('/cart');
         }
       } finally {
@@ -97,48 +62,27 @@ export function DeliveryPage() {
       }
     };
 
-    fetchProducts();
+    fetchData();
 
     return () => {
       isMountedRef.current = false;
     };
-  }, [navigate]);
-
-  // Заполнение формы данными пользователя
-  useEffect(() => {
-    const user = getUser();
-    if (user && !loading) {
-      const fullName = `${user.surname} ${user.name} ${user.patronymic}`.trim();
-      form.setFieldsValue({
-        fullName: fullName,
-        email: user.email,
-        phone: '',
-        address: '',
-      });
-    }
-  }, [loading, form]);
+  }, [navigate, form]);
 
   const getProductById = useCallback((id: number) => products.find(p => p.id === id), [products]);
 
-  const totalPrice = cartItems.reduce((sum, item) => {
-    const product = getProductById(item.id);
+  const totalPrice = user?.cart.reduce((sum, item) => {
+    const product = getProductById(item.productId);
     return sum + (product ? product.price * item.quantity : 0);
-  }, 0);
+  }, 0) || 0;
 
   const onFinish = useCallback(async (values: any) => {
-    if (isSubmittingRef.current || submitting) {
-      console.log('Отправка уже выполняется, игнорируем');
+    if (isSubmittingRef.current || submitting || !user) {
+      console.log('Отправка уже выполняется или пользователь не авторизован');
       return;
     }
 
-    const user = getUser();
-    if (!user) {
-      message.error('Пользователь не авторизован');
-      navigate('/login');
-      return;
-    }
-
-    if (cartItems.length === 0) {
+    if (user.cart.length === 0) {
       message.error('Корзина пуста');
       navigate('/cart');
       return;
@@ -150,13 +94,13 @@ export function DeliveryPage() {
     let createdOrderId: number | null = null;
 
     try {
-      // 1. Создаём заказ (только userID и statusID)
+      // 1. Создаём заказ
       const orderResponse = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userID: Number(user.id),
-          statusID: 1, // "Новый"
+          statusID: 1,
         }),
       });
 
@@ -168,11 +112,11 @@ export function DeliveryPage() {
       const order = await orderResponse.json();
       createdOrderId = order.id;
 
-      // 2. Добавляем товары в заказ через /api/order-items
-      for (const item of cartItems) {
-        const product = getProductById(item.id);
+      // 2. Добавляем товары в заказ
+      for (const item of user.cart) {
+        const product = getProductById(item.productId);
         if (!product) {
-          throw new Error(`Товар с id ${item.id} не найден`);
+          throw new Error(`Товар с id ${item.productId} не найден`);
         }
 
         const orderItemData = {
@@ -194,10 +138,11 @@ export function DeliveryPage() {
         }
       }
 
-      // Успех – очищаем корзину и уходим в каталог
+      // 3. Очищаем корзину пользователя
+      await updateUserCart(user.id, []);
+
       if (isMountedRef.current) {
         message.success('Заказ успешно оформлен!');
-        clearCart();
         navigate('/catalog');
       }
     } catch (error) {
@@ -223,7 +168,7 @@ export function DeliveryPage() {
       }
       isSubmittingRef.current = false;
     }
-  }, [cartItems, products, getProductById, navigate, submitting]);
+  }, [user, products, getProductById, navigate, submitting]);
 
   if (loading) {
     return (
@@ -235,7 +180,7 @@ export function DeliveryPage() {
     );
   }
 
-  if (cartItems.length === 0) {
+  if (!user || user.cart.length === 0) {
     return (
       <MainLayout>
         <div className={s.emptyCart}>
@@ -255,11 +200,11 @@ export function DeliveryPage() {
         <div className={s.deliveryContent}>
           <div className={s.orderSummary}>
             <h2>Ваш заказ</h2>
-            {cartItems.map(item => {
-              const product = getProductById(item.id);
+            {user.cart.map(item => {
+              const product = getProductById(item.productId);
               if (!product) return null;
               return (
-                <div key={item.id} className={s.summaryItem}>
+                <div key={item.productId} className={s.summaryItem}>
                   <span>{product.name} x {item.quantity}</span>
                   <span>{product.price * item.quantity} ₽</span>
                 </div>

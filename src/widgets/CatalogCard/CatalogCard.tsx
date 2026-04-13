@@ -1,6 +1,7 @@
 import { HeartOutlined, HeartFilled, ShoppingCartOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import s from './CatalogCard.module.scss';
+import { ProtectedAction } from '../ProtectedAction/ProtectedAction';
 
 export interface Category {
   id: number;
@@ -43,11 +44,13 @@ export function CatalogCard({
     <div className={s.catalogCard}>
       <div className={s.cardHeader}>
         <h4>{product.name}</h4>
-        <Button
-          type="text"
-          icon={isFavorite ? <HeartFilled style={{ color: '#ff4d4f' }} /> : <HeartOutlined />}
-          onClick={() => onToggleFavorite(product.id)}
-        />
+        {/* Кнопка избранного обёрнута в ProtectedAction */}
+        <ProtectedAction onAction={() => onToggleFavorite(product.id)}>
+          <Button
+            type="text"
+            icon={isFavorite ? <HeartFilled style={{ color: '#ff4d4f' }} /> : <HeartOutlined />}
+          />
+        </ProtectedAction>
       </div>
       <div className={s.cardBody}>
         <p className={s.price}>{product.price} ₽</p>
@@ -55,14 +58,16 @@ export function CatalogCard({
         <p className={`${s.stock} ${stockClass}`}>{stockStatus}</p>
       </div>
       <div className={s.cardFooter}>
-        <Button
-          type="primary"
-          icon={<ShoppingCartOutlined />}
-          onClick={() => onAddToCart(product.id)}
-          disabled={product.inStock === 0 || isInCart}
-        >
-          {isInCart ? 'В корзине' : 'В корзину'}
-        </Button>
+        {/* Кнопка корзины также обёрнута */}
+        <ProtectedAction onAction={() => onAddToCart(product.id)}>
+          <Button
+            type="primary"
+            icon={<ShoppingCartOutlined />}
+            disabled={product.inStock === 0 || isInCart}
+          >
+            {isInCart ? 'В корзине' : 'В корзину'}
+          </Button>
+        </ProtectedAction>
       </div>
     </div>
   );

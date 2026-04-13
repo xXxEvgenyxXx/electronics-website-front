@@ -2,66 +2,105 @@ import { useEffect, useState } from 'react';
 import { MainLayout } from '@/widgets';
 import { CatalogCard, type Product } from '@/widgets';
 import { Spin, message, Empty } from 'antd';
+//import { getCurrentUser, updateUserFavorites } from '@/api/user';
+import { getCurrentUser, updateUserFavorites } from '@/shared';
+import { getAllProducts } from '@/shared';
+import type { User } from '@/shared';
 import s from './FavoritePage.module.scss';
 
-const FAVORITES_KEY = 'catalog_favorites';
-const CART_KEY = 'catalog_cart';
-
-const getFavorites = (): number[] => {
-  const stored = localStorage.getItem(FAVORITES_KEY);
-  return stored ? JSON.parse(stored) : [];
-};
-
-const setFavorites = (ids: number[]) => {
-  localStorage.setItem(FAVORITES_KEY, JSON.stringify(ids));
-};
-
-const addToCart = (productId: number) => {
-  const stored = localStorage.getItem(CART_KEY);
-  const cart = stored ? JSON.parse(stored) : [];
-  const existing = cart.find((item: { id: number }) => item.id === productId);
-  if (existing) {
-    existing.quantity += 1;
-  } else {
-    cart.push({ id: productId, quantity: 1 });
-  }
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  message.success('Товар добавлен в корзину');
-};
-
 export function FavoritePage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [favorites, setFavorites] = useState<number[]>(getFavorites());
+  const [user, setUser] = useState<User | null>(null);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch all products
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch('/api/products');
-        const data = await res.json();
-        setProducts(data);
+        const [fetchedUser, fetchedProducts] = await Promise.all([
+          getCurrentUser(),
+          getAllProducts()
+        ]);
+        setUser(fetchedUser);
+        setAllProducts(fetchedProducts);
       } catch (error) {
-        console.error('Failed to fetch products:', error);
-        message.error('Ошибка загрузки товаров');
+        console.error('Failed to fetch data:', error);
+        message.error('Ошибка загрузки данных');
       } finally {
         setLoading(false);
       }
     };
-    fetchProducts();
+    fetchData();
   }, []);
 
-  // Filter products that are in favorites
-  const favoriteProducts = products.filter(product => favorites.includes(product.id));
+  const handleToggleFavorite = async (productId: number) => {
+    if (!user) return;
 
-  const handleToggleFavorite = (productId: number) => {
-    const updatedFavorites = favorites.includes(productId)
-      ? favorites.filter(id => id !== productId)
-      : [...favorites, productId];
-    setFavorites(updatedFavorites);
-    setFavorites(updatedFavorites); // save to localStorage via the setter's side effect? Actually we need to persist.
-    // We'll write a helper that updates localStorage directly.
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify(updatedFavorites));
+    const isFavorite = user.favoriteItems.some(item => item.id === productId);
+    let newFavorites;
+    
+    if (isFavorite) {
+      newFavorites = user.favoriteItems.filter(item => item.id !== productId);
+    } else {
+      const productToAdd = allProducts.find(p => p.id === productId);
+      if (!productToAdd) return;
+      newFavorites = [...user.favoriteItems, productToAdd];
+    }
+
+    const previousFavorites = user.favoriteItems;
+    setUser({ ...user, favoriteItems: newFavorites });
+
+    try {
+      const favoriteIds = newFavorites.map(item => item.id);
+      const updatedUser = await updateUserFavorites(user.id, favoriteIds);
+      setUser(updatedUser);
+    } catch (error) {
+      setUser({ ...user, favoriteItems: previousFavorites });
+      message.error('Не удалось обновить избранное');
+    }
+  };
+
+  const handleAddToCart = async (productId: number) => {
+    if (!user) {
+      message.error('Необходимо авторизоваться');
+      return;
+    }
+
+    const product = allProducts.find(p => p.id === productId);
+    if (!product || product.inStock === 0) {
+      message.error('Товар недоступен');
+      return;
+    }
+
+    const existingItem = user.cart.find(item => item.productId === productId);
+    let newCart;
+    
+    if (existingItem) {
+      newCart = user.cart.map(item =>
+        item.productId === productId
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+    } else {
+      newCart = [...user.cart, { productId, quantity: 1 }];
+    }
+
+    const previousCart = user.cart;
+    setUser({ ...user, cart: newCart });
+
+    try {
+      const response = await fetch(`/api/users/${user.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cart: newCart })
+      });
+      if (!response.ok) throw new Error('Failed to update cart');
+      const updatedUser = await response.json();
+      setUser(updatedUser);
+      message.success('Товар добавлен в корзину');
+    } catch (error) {
+      setUser({ ...user, cart: previousCart });
+      message.error('Не удалось добавить в корзину');
+    }
   };
 
   if (loading) {
@@ -73,6 +112,18 @@ export function FavoritePage() {
       </MainLayout>
     );
   }
+
+  if (!user) {
+    return (
+      <MainLayout>
+        <div className={s.errorContainer}>
+          <Empty description="Не удалось загрузить данные пользователя" />
+        </div>
+      </MainLayout>
+    );
+  }
+
+  const favoriteProducts = user.favoriteItems;
 
   return (
     <MainLayout>
@@ -88,7 +139,7 @@ export function FavoritePage() {
                 product={product}
                 isFavorite={true}
                 onToggleFavorite={handleToggleFavorite}
-                onAddToCart={addToCart}
+                onAddToCart={handleAddToCart}
               />
             ))}
           </div>

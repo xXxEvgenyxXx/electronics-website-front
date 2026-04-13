@@ -3,77 +3,81 @@ import { MainLayout } from '@/widgets';
 import { useNavigate } from 'react-router-dom';
 import { Button, InputNumber, message, Empty } from 'antd';
 import { DeleteOutlined, ShoppingOutlined } from '@ant-design/icons';
+import { getCurrentUser,  updateUserCart, getAllProducts, type User, type CartItem } from '@/shared';
 import type { Product } from '@/widgets';
 import s from './CartPage.module.scss';
 
-interface CartItem {
-  id: number;
-  quantity: number;
-}
-
-const CART_KEY = 'catalog_cart';
-
-const getCart = (): CartItem[] => {
-  const stored = localStorage.getItem(CART_KEY);
-  return stored ? JSON.parse(stored) : [];
-};
-
-const saveCart = (cart: CartItem[]) => {
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
-};
-
 export function CartPage() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const cart = getCart();
-    setCartItems(cart);
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch('/api/products');
-        const allProducts: Product[] = await res.json();
-        const cartProductIds = cart.map(item => item.id);
-        const cartProducts = allProducts.filter(p => cartProductIds.includes(p.id));
-        setProducts(cartProducts);
+        const [fetchedUser, fetchedProducts] = await Promise.all([
+          getCurrentUser(),
+          getAllProducts()
+        ]);
+        setUser(fetchedUser);
+        setAllProducts(fetchedProducts);
       } catch (error) {
-        message.error('Ошибка загрузки товаров');
+        console.error('Failed to fetch data:', error);
+        message.error('Ошибка загрузки данных');
       } finally {
         setLoading(false);
       }
     };
-    fetchProducts();
+    fetchData();
   }, []);
 
+  const getProductById = (id: number): Product | undefined => {
+    return allProducts.find(p => p.id === id);
+  };
+
+  const updateCart = async (newCart: CartItem[]) => {
+    if (!user) return;
+    
+    const previousCart = user.cart;
+    setUser({ ...user, cart: newCart });
+    
+    try {
+      const updatedUser = await updateUserCart(user.id, newCart);
+      setUser(updatedUser);
+    } catch (error) {
+      setUser({ ...user, cart: previousCart });
+      message.error('Не удалось обновить корзину');
+    }
+  };
+
   const updateQuantity = (productId: number, quantity: number) => {
-    const updatedCart = cartItems.map(item =>
-      item.id === productId ? { ...item, quantity: Math.max(1, quantity) } : item
+    if (!user) return;
+    
+    const updatedCart = user.cart.map(item =>
+      item.productId === productId ? { ...item, quantity: Math.max(1, quantity) } : item
     );
-    setCartItems(updatedCart);
-    saveCart(updatedCart);
+    updateCart(updatedCart);
   };
 
   const removeItem = (productId: number) => {
-    const updatedCart = cartItems.filter(item => item.id !== productId);
-    setCartItems(updatedCart);
-    saveCart(updatedCart);
-    setProducts(prev => prev.filter(p => p.id !== productId));
+    if (!user) return;
+    
+    const updatedCart = user.cart.filter(item => item.productId !== productId);
+    updateCart(updatedCart);
+    
     if (updatedCart.length === 0) {
       message.info('Корзина пуста');
     }
   };
 
-  const getProductById = (id: number) => products.find(p => p.id === id);
-
-  const totalPrice = cartItems.reduce((sum, item) => {
-    const product = getProductById(item.id);
+  const totalPrice = user?.cart.reduce((sum, item) => {
+    const product = getProductById(item.productId);
     return sum + (product ? product.price * item.quantity : 0);
-  }, 0);
+  }, 0) || 0;
 
   const handleCheckout = () => {
-    if (cartItems.length === 0) {
+    if (!user || user.cart.length === 0) {
       message.warning('Корзина пуста');
       return;
     }
@@ -81,10 +85,26 @@ export function CartPage() {
   };
 
   if (loading) {
-    return <MainLayout><div className={s.loading}>Загрузка...</div></MainLayout>;
+    return (
+      <MainLayout>
+        <div className={s.loadingContainer}>
+          <div className={s.loading}>Загрузка...</div>
+        </div>
+      </MainLayout>
+    );
   }
 
-  if (cartItems.length === 0) {
+  if (!user) {
+    return (
+      <MainLayout>
+        <div className={s.emptyCart}>
+          <Empty description="Не удалось загрузить данные пользователя" />
+        </div>
+      </MainLayout>
+    );
+  }
+
+  if (user.cart.length === 0) {
     return (
       <MainLayout>
         <div className={s.emptyCart}>
@@ -103,11 +123,11 @@ export function CartPage() {
         <h1>Корзина</h1>
         <div className={s.cartContent}>
           <div className={s.itemsList}>
-            {cartItems.map(item => {
-              const product = getProductById(item.id);
+            {user.cart.map(item => {
+              const product = getProductById(item.productId);
               if (!product) return null;
               return (
-                <div key={item.id} className={s.cartItem}>
+                <div key={item.productId} className={s.cartItem}>
                   <div className={s.itemInfo}>
                     <div className={s.itemName}>{product.name}</div>
                     <div className={s.itemPrice}>{product.price} ₽</div>
@@ -116,10 +136,10 @@ export function CartPage() {
                     <InputNumber
                       min={1}
                       value={item.quantity}
-                      onChange={(val) => updateQuantity(item.id, val || 1)}
+                      onChange={(val) => updateQuantity(item.productId, val || 1)}
                     />
                     <Button
-                      onClick={() => removeItem(item.id)}
+                      onClick={() => removeItem(item.productId)}
                       icon={<DeleteOutlined />}
                       danger
                     />
