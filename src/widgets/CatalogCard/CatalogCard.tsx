@@ -1,7 +1,7 @@
 import { HeartOutlined, HeartFilled, ShoppingCartOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import s from './CatalogCard.module.scss';
-import { ProtectedAction } from '../ProtectedAction/ProtectedAction';
+//import { ProtectedAction } from '../ProtectedAction/ProtectedAction';
 
 export interface Category {
   id: number;
@@ -44,13 +44,12 @@ export function CatalogCard({
     <div className={s.catalogCard}>
       <div className={s.cardHeader}>
         <h4>{product.name}</h4>
-        {/* Кнопка избранного обёрнута в ProtectedAction */}
-        <ProtectedAction onAction={() => onToggleFavorite(product.id)}>
-          <Button
-            type="text"
-            icon={isFavorite ? <HeartFilled style={{ color: '#ff4d4f' }} /> : <HeartOutlined />}
-          />
-        </ProtectedAction>
+        {/* Кнопка избранного напрямую */}
+        <Button
+          type="text"
+          icon={isFavorite ? <HeartFilled style={{ color: '#ff4d4f' }} /> : <HeartOutlined />}
+          onClick={() => onToggleFavorite(product.id)}
+        />
       </div>
       <div className={s.cardBody}>
         <p className={s.price}>{product.price} ₽</p>
@@ -58,16 +57,15 @@ export function CatalogCard({
         <p className={`${s.stock} ${stockClass}`}>{stockStatus}</p>
       </div>
       <div className={s.cardFooter}>
-        {/* Кнопка корзины также обёрнута */}
-        <ProtectedAction onAction={() => onAddToCart(product.id)}>
-          <Button
-            type="primary"
-            icon={<ShoppingCartOutlined />}
-            disabled={product.inStock === 0 || isInCart}
-          >
-            {isInCart ? 'В корзине' : 'В корзину'}
-          </Button>
-        </ProtectedAction>
+        {/* Кнопка корзины напрямую */}
+        <Button
+          type="primary"
+          icon={<ShoppingCartOutlined />}
+          disabled={product.inStock === 0 || isInCart}
+          onClick={() => onAddToCart(product.id)}
+        >
+          {isInCart ? 'В корзине' : 'В корзину'}
+        </Button>
       </div>
     </div>
   );

@@ -2,33 +2,10 @@ import { useEffect, useState } from 'react';
 import { MainLayout } from '@/widgets';
 import { CatalogCard, type Product, type Category } from '@/widgets';
 import { Checkbox, Spin, message, Pagination } from 'antd';
+import { getCurrentUser, addFavorite, removeFavorite, updateUserCart } from '@/shared/api/user';
+import { getAllProducts } from '@/shared/api/products';
+import type { User } from '@/shared/types';
 import s from './CatalogPage.module.scss';
-// localStorage helpers (unchanged)
-const FAVORITES_KEY = 'catalog_favorites';
-const CART_KEY = 'catalog_cart';
-
-const getFavorites = (): number[] => {
-  const stored = localStorage.getItem(FAVORITES_KEY);
-  return stored ? JSON.parse(stored) : [];
-};
-
-const setFavorites = (ids: number[]) => {
-  localStorage.setItem(FAVORITES_KEY, JSON.stringify(ids));
-};
-
-const toggleFavorite = (productId: number, currentFavorites: number[]): number[] => {
-  const updated = currentFavorites.includes(productId)
-    ? currentFavorites.filter(id => id !== productId)
-    : [...currentFavorites, productId];
-  setFavorites(updated);
-  return updated;
-};
-
-const getCartIds = (): number[] => {
-  const stored = localStorage.getItem(CART_KEY);
-  const cart = stored ? JSON.parse(stored) : [];
-  return cart.map((item: { id: number }) => item.id);
-};
 
 const PAGE_SIZE = 6;
 
@@ -37,23 +14,26 @@ export function CatalogPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<Set<number>>(new Set());
-  const [favorites, setFavorites] = useState<number[]>(getFavorites());
-  const [cartIds, setCartIds] = useState<number[]>(getCartIds());
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Fetch categories and products
+  // Загрузка категорий, товаров и текущего пользователя
   useEffect(() => {
     const fetchData = async () => {
       try {
         const [categoriesRes, productsRes] = await Promise.all([
           fetch('/api/categories'),
-          fetch('/api/products'),
+          getAllProducts(), // или fetch, если нет готового API
         ]);
+
         const categoriesData = await categoriesRes.json();
-        const productsData = await productsRes.json();
         setCategories(categoriesData);
-        setProducts(productsData);
+        setProducts(productsRes); // getAllProducts возвращает массив
+
+        // Пытаемся получить пользователя (может быть null, если не авторизован)
+        const currentUser = await getCurrentUser().catch(() => null);
+        setUser(currentUser);
       } catch (error) {
         console.error('Failed to fetch data:', error);
         message.error('Ошибка загрузки данных');
@@ -64,7 +44,7 @@ export function CatalogPage() {
     fetchData();
   }, []);
 
-  // Filter products when selectedCategories or products change
+  // Фильтрация товаров по выбранным категориям
   useEffect(() => {
     let filtered: Product[];
     if (selectedCategories.size === 0) {
@@ -73,7 +53,7 @@ export function CatalogPage() {
       filtered = products.filter(product => selectedCategories.has(product.category.id));
     }
     setFilteredProducts(filtered);
-    setCurrentPage(1); // reset to first page when filters change
+    setCurrentPage(1);
   }, [selectedCategories, products]);
 
   const handleCategoryToggle = (categoryId: number) => {
@@ -88,28 +68,75 @@ export function CatalogPage() {
     });
   };
 
-  const handleToggleFavorite = (productId: number) => {
-    const updated = toggleFavorite(productId, favorites);
-    setFavorites(updated);
-  };
+  // --- Работа с избранным (через API) ---
+  const handleToggleFavorite = async (productId: number) => {
+    if (!user) {
+      message.warning('Необходимо войти в систему');
+      return;
+    }
 
-  const handleAddToCart = (productId: number) => {
-    const stored = localStorage.getItem(CART_KEY);
-    const cart = stored ? JSON.parse(stored) : [];
-    const existing = cart.find((item: { id: number }) => item.id === productId);
-    if (!existing) {
-      cart.push({ id: productId, quantity: 1 });
-      localStorage.setItem(CART_KEY, JSON.stringify(cart));
-      setCartIds(prev => [...prev, productId]);
-      message.success('Товар добавлен в корзину');
+    const favs = user.favoriteItems || [];
+    const isFavorite = favs.some(item => item.id === productId);
+    const previousFavs = favs;
+    const newFavs = isFavorite
+      ? favs.filter(item => item.id !== productId)
+      : [...favs, products.find(p => p.id === productId)!];
+
+    // Оптимистичное обновление UI
+    setUser({ ...user, favoriteItems: newFavs });
+
+    try {
+      const updatedUser = isFavorite
+        ? await removeFavorite(user.id, productId)
+        : await addFavorite(user.id, productId);
+      setUser(updatedUser);
+    } catch (error) {
+      setUser({ ...user, favoriteItems: previousFavs });
+      message.error('Не удалось обновить избранное');
     }
   };
 
-  // Pagination: slice the filtered products
+  // --- Работа с корзиной (через API) ---
+  const handleAddToCart = async (productId: number) => {
+    if (!user) {
+      message.warning('Необходимо войти в систему');
+      return;
+    }
+
+    const product = products.find(p => p.id === productId);
+    if (!product || product.inStock === 0) {
+      message.error('Товар недоступен');
+      return;
+    }
+
+    const cart = user.cart || [];
+    const existingItem = cart.find(item => item.productId === productId);
+    let newCart;
+    if (existingItem) {
+      newCart = cart.map(item =>
+        item.productId === productId ? { ...item, quantity: item.quantity + 1 } : item
+      );
+    } else {
+      newCart = [...cart, { productId, quantity: 1 }];
+    }
+
+    const previousCart = cart;
+    setUser({ ...user, cart: newCart });
+
+    try {
+      const updatedUser = await updateUserCart(user.id, newCart);
+      setUser(updatedUser);
+      message.success('Товар добавлен в корзину');
+    } catch (error) {
+      setUser({ ...user, cart: previousCart });
+      message.error('Не удалось добавить в корзину');
+    }
+  };
+
+  // Пагинация
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const paginatedProducts = filteredProducts.slice(startIndex, startIndex + PAGE_SIZE);
   const totalProducts = filteredProducts.length;
-  const totalPages = Math.ceil(totalProducts / PAGE_SIZE);
 
   if (loading) {
     return (
@@ -136,19 +163,26 @@ export function CatalogPage() {
             </Checkbox>
           ))}
         </aside>
+
         <div className={s.cardsContainer}>
           <div className={s.cardsWrapper}>
-            {paginatedProducts.map(product => (
-              <CatalogCard
-                key={product.id}
-                product={product}
-                isFavorite={favorites.includes(product.id)}
-                isInCart={cartIds.includes(product.id)}
-                onToggleFavorite={handleToggleFavorite}
-                onAddToCart={handleAddToCart}
-              />
-            ))}
+            {paginatedProducts.map(product => {
+              const isFavorite = user?.favoriteItems?.some(item => item.id === product.id) || false;
+              const isInCart = user?.cart?.some(item => item.productId === product.id) || false;
+
+              return (
+                <CatalogCard
+                  key={product.id}
+                  product={product}
+                  isFavorite={isFavorite}
+                  isInCart={isInCart}
+                  onToggleFavorite={handleToggleFavorite}
+                  onAddToCart={handleAddToCart}
+                />
+              );
+            })}
           </div>
+
           {totalProducts > 0 && (
             <div className={s.paginationWrapper}>
               <Pagination

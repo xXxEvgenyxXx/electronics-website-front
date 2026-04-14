@@ -26,6 +26,7 @@ export function LoginPage() {
                 // Сохраняем данные пользователя (исключая пароль для безопасности)
                 const { password, ...userWithoutPassword } = user;
                 localStorage.setItem('user', JSON.stringify(userWithoutPassword));
+                localStorage.setItem('userId', user.id);
                 navigate('/');
             } else {
                 message.error('Неверный логин или пароль');

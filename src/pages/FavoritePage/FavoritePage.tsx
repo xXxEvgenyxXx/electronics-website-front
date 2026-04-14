@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react';
 import { MainLayout } from '@/widgets';
 import { CatalogCard, type Product } from '@/widgets';
 import { Spin, message, Empty } from 'antd';
-//import { getCurrentUser, updateUserFavorites } from '@/api/user';
-import { getCurrentUser, updateUserFavorites } from '@/shared';
-import { getAllProducts } from '@/shared';
-import type { User } from '@/shared';
+import { getCurrentUser, addFavorite, removeFavorite, updateUserCart } from '@/shared/api/user';
+import { getAllProducts } from '@/shared/api/products';
+import type { User } from '@/shared/types';
 import s from './FavoritePage.module.scss';
 
 export function FavoritePage() {
@@ -36,24 +35,22 @@ export function FavoritePage() {
     if (!user) return;
 
     const isFavorite = user.favoriteItems.some(item => item.id === productId);
-    let newFavorites;
     
-    if (isFavorite) {
-      newFavorites = user.favoriteItems.filter(item => item.id !== productId);
-    } else {
-      const productToAdd = allProducts.find(p => p.id === productId);
-      if (!productToAdd) return;
-      newFavorites = [...user.favoriteItems, productToAdd];
-    }
-
+    // Оптимистичное обновление UI
     const previousFavorites = user.favoriteItems;
+    const newFavorites = isFavorite
+      ? previousFavorites.filter(item => item.id !== productId)
+      : [...previousFavorites, allProducts.find(p => p.id === productId)!];
+    
     setUser({ ...user, favoriteItems: newFavorites });
 
     try {
-      const favoriteIds = newFavorites.map(item => item.id);
-      const updatedUser = await updateUserFavorites(user.id, favoriteIds);
+      const updatedUser = isFavorite
+        ? await removeFavorite(user.id, productId)
+        : await addFavorite(user.id, productId);
       setUser(updatedUser);
     } catch (error) {
+      // Откат при ошибке
       setUser({ ...user, favoriteItems: previousFavorites });
       message.error('Не удалось обновить избранное');
     }
@@ -88,13 +85,7 @@ export function FavoritePage() {
     setUser({ ...user, cart: newCart });
 
     try {
-      const response = await fetch(`/api/users/${user.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cart: newCart })
-      });
-      if (!response.ok) throw new Error('Failed to update cart');
-      const updatedUser = await response.json();
+      const updatedUser = await updateUserCart(user.id, newCart);
       setUser(updatedUser);
       message.success('Товар добавлен в корзину');
     } catch (error) {
@@ -123,7 +114,7 @@ export function FavoritePage() {
     );
   }
 
-  const favoriteProducts = user.favoriteItems;
+  const favoriteProducts = user.favoriteItems || [];
 
   return (
     <MainLayout>
