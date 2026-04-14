@@ -59,3 +59,9 @@ export async function removeFavorite(userId: number, productId: number): Promise
 export async function updateUserCart(userId: number, cart: CartItem[]): Promise<User> {
   return updateUser(userId, { cart });
 }
+export function logout() {
+  localStorage.removeItem('userId');
+  localStorage.removeItem('id');
+  localStorage.removeItem('user');
+  // можно также сделать редирект на /login
+}

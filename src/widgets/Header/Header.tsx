@@ -6,6 +6,7 @@ import { Logo } from '../Logo';
 import { Switch, Button, Drawer } from 'antd';
 import { useTheme } from '@/widgets';
 import s from './Header.module.scss';
+import { logout } from '@/shared';
 import clsx from 'clsx';
 
 export function Header() {
@@ -33,10 +34,10 @@ export function Header() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
+    logout();
     setUser(null);
-    navigate('/');
-    setMobileMenuOpen(false);
+    navigate('/login');
+    window.location.reload();
   };
 
   const closeMenu = () => setMobileMenuOpen(false);
