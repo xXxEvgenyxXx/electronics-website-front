@@ -10,9 +10,15 @@ interface Product {
   id: number;
   name: string;
   price: number;
-  categoryId: number;
-  categoryName?: string; // предположим, что приходит с бэка
   inStock: number;
+  category: {
+    id: number;
+    name: string;
+  };
+  manufacturer?: {
+    id: number;
+    name: string;
+  };
 }
 
 interface Category {
@@ -49,8 +55,8 @@ export function AdminProductsPage() {
   }, []);
 
   const filteredProducts = products.filter(product => {
-    // Фильтр по категории
-    if (categoryFilter !== null && product.categoryId !== categoryFilter) {
+    // Фильтр по категории (используем product.category.id)
+    if (categoryFilter !== null && product.category.id !== categoryFilter) {
       return false;
     }
     // Фильтр по наличию
@@ -84,10 +90,7 @@ export function AdminProductsPage() {
     {
       title: 'Категория',
       key: 'category',
-      render: (_, record) => {
-        const cat = categories.find(c => c.id === record.categoryId);
-        return cat?.name || '—';
-      },
+      render: (_, record) => record.category.name,
     },
     {
       title: 'Остаток',
