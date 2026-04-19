@@ -92,3 +92,42 @@
     }
   }
 }
+.orderCollapse {
+  margin-top: 16px;
+  background: transparent;
+  :global(.ant-collapse-header) {
+    padding-left: 0 !important;
+    font-weight: 500;
+    color: var(--color-text);
+  }
+  :global(.ant-collapse-content-box) {
+    padding: 8px 0 !important;
+  }
+}
+
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.itemRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.itemName {
+  color: var(--color-text);
+  opacity: 0.85;
+}
+
+.itemPrice {
+  font-weight: 500;
+  color: var(--color-text);
+}
