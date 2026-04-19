@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { MainLayout } from '@/widgets';
 import { Form, Input, Button, message, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { getCurrentUser, getAllProducts, type User } from '@/shared';
+import { getCurrentUser, getAllProducts, updateUserCart, type User } from '@/shared';
 import type { Product } from '@/widgets';
 import s from './DeliveryPage.module.scss';
 
