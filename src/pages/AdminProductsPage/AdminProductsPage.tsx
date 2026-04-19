@@ -1,42 +1,43 @@
+// AdminProductsPage.tsx
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, Button, Input, message, Spin, Space } from 'antd';
+import { Table, message, Spin } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { AdminLayout } from '@/widgets';
 import s from './AdminProductsPage.module.scss';
-import { SaveOutlined, CloseOutlined } from '@ant-design/icons';
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  categoryId: number;
+  categoryName?: string; // предположим, что приходит с бэка
+  inStock: number;
+}
 
 interface Category {
   id: number;
   name: string;
 }
 
-interface Product {
-  id: number;
-  name: string;
-  inStock: number;
-  price: number;
-  category: Category;
-  manufacturer: {
-    id: number;
-    name: string;
-  };
-}
-
 export function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
-  const [editingProductId, setEditingProductId] = useState<number | null>(null);
-  const [editStockValue, setEditStockValue] = useState<number>(0);
-  const [updating, setUpdating] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState<number | null>(null);
+  const [stockFilter, setStockFilter] = useState<'all' | 'low' | 'out'>('all');
 
-  const fetchProducts = async () => {
+  const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get<Product[]>('/api/products');
-      setProducts(response.data);
+      const [productsRes, categoriesRes] = await Promise.all([
+        axios.get<Product[]>('/api/products'),
+        axios.get<Category[]>('/api/categories')
+      ]);
+      setProducts(productsRes.data);
+      setCategories(categoriesRes.data);
     } catch (error) {
-      message.error('Не удалось загрузить товары');
+      message.error('Не удалось загрузить данные');
       console.error(error);
     } finally {
       setLoading(false);
@@ -44,47 +45,23 @@ export function AdminProductsPage() {
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchData();
   }, []);
 
-  const startEdit = (product: Product) => {
-    setEditingProductId(product.id);
-    setEditStockValue(product.inStock);
-  };
-
-  const cancelEdit = () => {
-    setEditingProductId(null);
-    setEditStockValue(0);
-  };
-
-  const saveStock = async (product: Product) => {
-    if (editStockValue < 0) {
-        message.warning('Количество не может быть отрицательным');
-        return;
+  const filteredProducts = products.filter(product => {
+    // Фильтр по категории
+    if (categoryFilter !== null && product.categoryId !== categoryFilter) {
+      return false;
     }
-
-    setUpdating(true);
-    try {
-        // Prepare the full payload with updated stock
-        const payload = {
-        name: product.name,
-        categoryID: product.category.id,
-        price: product.price,
-        manufacturerID: product.manufacturer.id,
-        inStock: editStockValue,
-        };
-
-        await axios.put(`/api/products/${product.id}`, payload);
-        message.success('Количество на складе обновлено');
-        await fetchProducts(); // refresh list
-        cancelEdit();
-    } catch (error) {
-        message.error('Ошибка при обновлении');
-        console.error(error);
-    } finally {
-        setUpdating(false);
+    // Фильтр по наличию
+    if (stockFilter === 'low' && (product.inStock > 10 || product.inStock === 0)) {
+      return false;
     }
-    };
+    if (stockFilter === 'out' && product.inStock !== 0) {
+      return false;
+    }
+    return true;
+  });
 
   const columns: ColumnsType<Product> = [
     {
@@ -99,72 +76,72 @@ export function AdminProductsPage() {
       key: 'name',
     },
     {
+      title: 'Цена',
+      dataIndex: 'price',
+      key: 'price',
+      render: (price: number) => `${price.toLocaleString()} ₽`,
+    },
+    {
       title: 'Категория',
       key: 'category',
-      render: (_, record) => record.category.name,
+      render: (_, record) => {
+        const cat = categories.find(c => c.id === record.categoryId);
+        return cat?.name || '—';
+      },
     },
     {
-      title: 'Цена',
-      key: 'price',
-      render: (_, record) => `${record.price.toLocaleString()} ₽`,
-    },
-    {
-      title: 'Количество на складе',
+      title: 'Остаток',
+      dataIndex: 'inStock',
       key: 'inStock',
-      render: (_, record) => {
-        if (editingProductId === record.id) {
-          return (
-            <Input
-              type="number"
-              min={0}
-              value={editStockValue}
-              onChange={(e) => setEditStockValue(Number(e.target.value))}
-              style={{ width: 100 }}
-              disabled={updating}
-            />
-          );
-        }
-        return record.inStock;
-      },
-    },
-    {
-      title: 'Действия',
-      key: 'actions',
-      render: (_, record) => {
-        if (editingProductId === record.id) {
-          return (
-            <Space>
-              <Button
-                type="primary"
-                size="small"
-                onClick={() => saveStock(record)}
-                loading={updating}
-                icon={<SaveOutlined/>}
-              />
-              <Button size="small" onClick={cancelEdit} disabled={updating} icon={<CloseOutlined/>}/>
-            </Space>
-          );
-        }
-        return (
-          <Button
-            type="default"
-            size="small"
-            onClick={() => startEdit(record)}
-          >
-            Изменить количество на складе
-          </Button>
-        );
-      },
+      render: (inStock: number) => (
+        <span style={{ color: inStock === 0 ? 'red' : inStock <= 10 ? 'orange' : 'inherit' }}>
+          {inStock}
+        </span>
+      ),
     },
   ];
 
   return (
     <AdminLayout>
       <div className={s.products}>
-        <h1>Все товары ({products.length})</h1>
+        <h1>Все товары ({filteredProducts.length})</h1>
+
+        <div className={s.filters}>
+          <div className={s.filterGroup}>
+            <label htmlFor="categoryFilter">Категория:</label>
+            <select
+              id="categoryFilter"
+              value={categoryFilter ?? ''}
+              onChange={(e) => setCategoryFilter(e.target.value ? Number(e.target.value) : null)}
+              className={s.select}
+            >
+              <option value="">Все категории</option>
+              {categories.map(cat => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={s.filterGroup}>
+            <label htmlFor="stockFilter">Наличие:</label>
+            <select
+              id="stockFilter"
+              value={stockFilter}
+              onChange={(e) => setStockFilter(e.target.value as 'all' | 'low' | 'out')}
+              className={s.select}
+            >
+              <option value="all">Все товары</option>
+              <option value="low">Заканчивается (≤10)</option>
+              <option value="out">Нет в наличии</option>
+            </select>
+          </div>
+        </div>
+
         <Spin spinning={loading}>
           <Table
-            dataSource={products}
+            dataSource={filteredProducts}
             columns={columns}
             rowKey="id"
             pagination={{ pageSize: 10 }}

@@ -1,3 +1,4 @@
+// AdminOrdersPage.tsx
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Table, message, Spin } from 'antd';
@@ -21,6 +22,7 @@ export function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
   const [updatingStatusId, setUpdatingStatusId] = useState<number | null>(null);
+  const [statusFilter, setStatusFilter] = useState<number | null>(null);
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -57,6 +59,10 @@ export function AdminOrdersPage() {
     }
   };
 
+  const filteredOrders = statusFilter === null
+    ? orders
+    : orders.filter(order => order.statusID === statusFilter);
+
   const columns: ColumnsType<Order> = [
     {
       title: 'ID',
@@ -91,40 +97,55 @@ export function AdminOrdersPage() {
     {
       title: 'Статус',
       key: 'status',
-      render: (_, record) => {
-        const currentStatus = orderStatuses.find(s => s.id === record.statusID);
-        return (
-          <select
-            value={record.statusID}
-            onChange={(e) => updateOrderStatus(record.id, Number(e.target.value))}
-            disabled={updatingStatusId === record.id}
-            style={{
-              padding: '4px 8px',
-              borderRadius: '4px',
-              border: '1px solid var(--color-border)',
-              backgroundColor: 'var(--background-body)',
-              color: 'var(--color-text)',
-              cursor: updatingStatusId === record.id ? 'wait' : 'pointer'
-            }}
-          >
-            {orderStatuses.map((status) => (
-              <option key={status.id} value={status.id}>
-                {status.name}
-              </option>
-            ))}
-          </select>
-        );
-      },
+      render: (_, record) => (
+        <select
+          value={record.statusID}
+          onChange={(e) => updateOrderStatus(record.id, Number(e.target.value))}
+          disabled={updatingStatusId === record.id}
+          style={{
+            padding: '4px 8px',
+            borderRadius: '4px',
+            border: '1px solid var(--color-border)',
+            backgroundColor: 'var(--background-body)',
+            color: 'var(--color-text)',
+            cursor: updatingStatusId === record.id ? 'wait' : 'pointer'
+          }}
+        >
+          {orderStatuses.map((status) => (
+            <option key={status.id} value={status.id}>
+              {status.name}
+            </option>
+          ))}
+        </select>
+      ),
     },
   ];
 
   return (
     <AdminLayout>
       <div className={s.orders}>
-        <h1>Все заказы ({orders.length})</h1>
+        <h1>Все заказы ({filteredOrders.length})</h1>
+
+        <div className={s.filters}>
+          <label htmlFor="statusFilter">Фильтр по статусу:</label>
+          <select
+            id="statusFilter"
+            value={statusFilter ?? ''}
+            onChange={(e) => setStatusFilter(e.target.value ? Number(e.target.value) : null)}
+            className={s.select}
+          >
+            <option value="">Все статусы</option>
+            {orderStatuses.map(status => (
+              <option key={status.id} value={status.id}>
+                {status.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <Spin spinning={loading}>
           <Table
-            dataSource={orders}
+            dataSource={filteredOrders}
             columns={columns}
             rowKey="id"
             pagination={{ pageSize: 10 }}
