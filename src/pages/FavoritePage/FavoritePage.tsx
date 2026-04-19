@@ -34,14 +34,15 @@ export function FavoritePage() {
   const handleToggleFavorite = async (productId: number) => {
     if (!user) return;
 
-    const isFavorite = user.favoriteItems.some(item => item.id === productId);
-    
-    // Оптимистичное обновление UI
-    const previousFavorites = user.favoriteItems;
+    const favorites = user.favoriteItems || [];
+    const existingItem = favorites.find(item => item.productId === productId);
+    const isFavorite = !!existingItem;
+
     const newFavorites = isFavorite
-      ? previousFavorites.filter(item => item.id !== productId)
-      : [...previousFavorites, allProducts.find(p => p.id === productId)!];
-    
+      ? favorites.filter(item => item.productId !== productId)
+      : [...favorites, { productId, quantity: 1 }];
+
+    const previousFavorites = favorites;
     setUser({ ...user, favoriteItems: newFavorites });
 
     try {
@@ -50,7 +51,6 @@ export function FavoritePage() {
         : await addFavorite(user.id, productId);
       setUser(updatedUser);
     } catch (error) {
-      // Откат при ошибке
       setUser({ ...user, favoriteItems: previousFavorites });
       message.error('Не удалось обновить избранное');
     }
@@ -114,7 +114,10 @@ export function FavoritePage() {
     );
   }
 
-  const favoriteProducts = user.favoriteItems || [];
+  const favoriteProductIds = user.favoriteItems?.map(item => item.productId) || [];
+  const favoriteProducts = allProducts.filter(product =>
+    favoriteProductIds.includes(product.id)
+  );
 
   return (
     <MainLayout>

@@ -75,15 +75,17 @@ export function CatalogPage() {
       return;
     }
 
-    const favs = user.favoriteItems || [];
-    const isFavorite = favs.some(item => item.id === productId);
-    const previousFavs = favs;
-    const newFavs = isFavorite
-      ? favs.filter(item => item.id !== productId)
-      : [...favs, products.find(p => p.id === productId)!];
+    const favorites = user.favoriteItems || [];
+    const existingItem = favorites.find(item => item.productId === productId);
+    const isFavorite = !!existingItem;
 
     // Оптимистичное обновление UI
-    setUser({ ...user, favoriteItems: newFavs });
+    const newFavorites = isFavorite
+      ? favorites.filter(item => item.productId !== productId)
+      : [...favorites, { productId, quantity: 1 }];
+
+    const previousFavorites = favorites;
+    setUser({ ...user, favoriteItems: newFavorites });
 
     try {
       const updatedUser = isFavorite
@@ -91,7 +93,7 @@ export function CatalogPage() {
         : await addFavorite(user.id, productId);
       setUser(updatedUser);
     } catch (error) {
-      setUser({ ...user, favoriteItems: previousFavs });
+      setUser({ ...user, favoriteItems: previousFavorites });
       message.error('Не удалось обновить избранное');
     }
   };
@@ -167,7 +169,7 @@ export function CatalogPage() {
         <div className={s.cardsContainer}>
           <div className={s.cardsWrapper}>
             {paginatedProducts.map(product => {
-              const isFavorite = user?.favoriteItems?.some(item => item.id === product.id) || false;
+              const isFavorite = user?.favoriteItems?.some(item => item.productId === product.id) || false;
               const isInCart = user?.cart?.some(item => item.productId === product.id) || false;
 
               return (
